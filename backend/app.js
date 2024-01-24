@@ -4,7 +4,8 @@ const dotenv = require('dotenv');
 const PORT = 5000;
 const dbconnection = require("./config/DBconnection.js");
 const cookieparser = require('cookie-parser');
-const cors = require('cors')
+const cors = require('cors');
+const userRoutes = require('./route/users/usersRoutes.js')
 
 dotenv.config();
 app.use(express.json());
@@ -16,6 +17,8 @@ app.use(cors({origin: true, credentials: true}))
 app.get('/',(req,res)=>{
     res.send("Hello World!")
 });
+
+app.use('/api/users',userRoutes)
 
 //connect to the database mongodb
 dbconnection();
