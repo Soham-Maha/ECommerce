@@ -11,7 +11,7 @@ const crypto = require("crypto");
 
 //register a user
 const registerUser = asyncHandler(async (req, res) => {
-  const { email, password, name, surname } = req?.body;
+  const { email, password, firstName, lastName } = req?.body;
   try {
     const user = await User.findOne({ email: email });
 
@@ -19,11 +19,14 @@ const registerUser = asyncHandler(async (req, res) => {
       throw new Error("User Already exists! Please login.");
     }
 
+    const salt = await bcrypt.genSalt(10);
+    const encryptedPassword = await bcrypt.hash(password, salt);
+
     const newUser = await User.create({
-      firstName: name,
-      lastName: surname,
+      firstName: firstName,
+      lastName: lastName,
       email: email,
-      password: password,
+      password: encryptedPassword,
     });
 
     const createdUser = newUser;
