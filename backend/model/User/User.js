@@ -65,6 +65,33 @@ const UserSchema = new mongoose.Schema(
   }
 );
 
+//account verification
+UserSchema.methods.createAccountVerificationToken = async function () {
+  //create the random bytes
+  const verifiactionToken = crypto.randomBytes(32).toString("hex");
+
+  this.accountVerificationToken = crypto
+    .createHash("sha256")
+    .update(verifiactionToken)
+    .digest("hex");
+
+  this.accountVerificationTokenExpires = Date.now() + 30 * 60 * 1000;
+
+  return verifiactionToken;
+};
+
+//password reset logic
+
+UserSchema.methods.createPasswordResetToken = async function () {
+  const resetToken = crypto.randomBytes(32).toString("hex");
+  this.passwordResetToken = crypto
+    .createHash("sha256")
+    .update(resetToken)
+    .digest("hex");
+  this.passwordResetTokenExpires = Date.now() + 30 * 60 * 1000;
+
+  return resetToken;
+};
 
 const User = mongoose.model("User", UserSchema);
 module.exports = User;
