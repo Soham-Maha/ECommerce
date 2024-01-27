@@ -1,13 +1,14 @@
 const express = require('express');
 const app = express();
-const dotenv = require('dotenv');
+const dotenv = require('dotenv').config();
+
 const PORT = 5000;
 const dbconnection = require("./config/DBconnection.js");
 const cookieparser = require('cookie-parser');
 const cors = require('cors');
 const userRoutes = require('./route/users/usersRoutes.js')
 
-dotenv.config();
+
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 app.use(cookieparser());

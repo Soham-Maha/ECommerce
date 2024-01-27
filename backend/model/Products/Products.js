@@ -42,4 +42,74 @@ const productSchema = new mongoose.Schema({
         type: Boolean,
         default: false,
     },
+    priceOfGoods:{
+        type: Number,
+    },
+    sellPrice:{
+        type:Number,
+    },
+    aliexpressLink:{
+        type: String,
+    },
+    cjdropshippingLink:{
+        type: String,
+    },
+    competitorShop: {
+        type: String,
+    },
+    productAge: {
+        type: String,
+    },
+    ppopularity: {
+        type: String,
+    },
+    competitivness:{
+        type: Number,
+    },
+    bestPlatform: {
+        type: String,
+    },
+    category: {
+        type: String,
+        default: "Beauty",
+    },
+    keywords: {
+        type: [String],
+    },
+    user: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+    },
+    image1:{
+        type: String,
+    },
+    image2:{
+        type: String,
+    },
+    image3:{
+        type: String,
+    },
+    image4:{
+        type: String,
+    },
+    image5:{
+        type: String,
+    },
+    image6:{
+        type: String,
+    },
+    image7:{
+        type: String,
+    },
+    image8:{
+        type: String,
+    },
+},{
+    toJSON: {virtuals: true},
+    toObject: {virtuals: true},
+    timestamps: {virtuals: true}
 })
+
+const Product = mongoose.model("Product",productSchema);
+
+module.exports = Product;

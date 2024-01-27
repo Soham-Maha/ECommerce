@@ -6,11 +6,11 @@ const User = require("../../model/User/User.js");
 const mongoose = require("mongoose");
 const sgMail = require("@sendgrid/mail");
 sgMail.setApiKey(process.env.APP_SENDGRID_API_KEY);
-const stripe = require("stripe");
+const stripe = require("stripe")(process.env.APP_STRIPE_SECRET_KEY);
 const crypto = require("crypto");
 
 const expiryDate = new Date();
-const date1 = expiryDate.setTime(expiryDate.getTime()+1);
+const date1 = expiryDate.setTime(expiryDate.getTime() + 12);
 
 //register a user
 const registerUser = asyncHandler(async (req, res) => {
@@ -26,26 +26,30 @@ const registerUser = asyncHandler(async (req, res) => {
     const encryptedPassword = await bcrypt.hash(password, salt);
 
     //stripe customer id
+    const stripeCustomer = await stripe.customers.create({ email: email });
 
-    
     const newUser = await User.create({
       firstName: firstName,
       lastName: lastName,
       email: email,
       password: encryptedPassword,
+      stripe_customer_id: stripeCustomer.id,
     });
     //set cookie token
     const data = {
-      id: newUser?._id
-    }
-    const token = jwt.sign(data, process.env.API_JWT_SECRET_KEY,{
-      expiresIn: '12h'
-    })
-    
-    const createdUser = newUser;
-    createdUser.password = undefined; 
+      id: newUser?._id,
+    };
+    const token = jwt.sign(data, process.env.API_JWT_SECRET_KEY, {
+      expiresIn: "12h",
+    });
 
-    res.status(201).cookie("token", token, {expires: new Date(Date.now() + date1)}).json({ success: true, token, createdUser });
+    const createdUser = newUser;
+    createdUser.password = undefined;
+
+    res
+      .status(201)
+      .cookie("token", token, { expires: new Date(Date.now() + date1) })
+      .json({ success: true, token, createdUser });
   } catch (error) {
     res.status(401).json({
       success: false,
@@ -54,6 +58,88 @@ const registerUser = asyncHandler(async (req, res) => {
   }
 });
 
+//Login User
+const userLogin = asyncHandler(async(req,res)=>{
+  const {email,password} = req?.body;
+  try {
+    const emailExists = await User.findOne({ email: email });
+
+    if (!emailExists) {
+      throw new Error("User does not exist! Please Register!");
+    }
+
+    const user = await User.findOne({email: email})
+    const comparePassword = await bcrypt.compare(password, user?.password);
+    if(!comparePassword){
+      throw new Error("Password does not match")
+    }
+
+    const data = {
+      id:user?._id,
+    };
+
+    //sign in the cookie token
+    const token = jwt.sign(data, process.env.API_JWT_SECRET_KEY, {
+      expiresIn: "12h",
+    });
+    
+    user.password = undefined;
+
+    res.status(200).cookie("token",token, {
+      expires: new Date(Date.now()+date1),
+      sameSite: "None",
+      secure: true,
+    }).json({
+      success: true,
+      token,
+      user,
+    })
+
+  } catch (error) {
+    res.status(401).json({
+      success: false,
+      message: error.message,
+    });
+  }
+})
+
+//user details
+const userDetails = asyncHandler(async(req,res)=>{
+  const id = req?.user?._id;
+  try {
+    const user = await User.findById(id).select("-password ");
+    res.status(200).json({
+      success: true,
+      user,
+    })
+  } catch (error) {
+    res.status(401).json({
+      success:false,
+      message:error.message,
+    });
+  }
+})
+
+//fetch all users
+
+const fetchAllUsers = asyncHandler(async(req,res)=>{
+  try {
+    const user = await User.find();
+    res.status(200).json({
+      success: true,
+      user,
+    })
+  } catch (error) {
+    res.status(401).json({
+      success:false,
+      message:error.message,
+    });
+  }
+})
+
 module.exports = {
-    registerUser
-}
+  registerUser,
+  userLogin,
+  userDetails,
+  fetchAllUsers,
+};
