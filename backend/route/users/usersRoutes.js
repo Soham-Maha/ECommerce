@@ -1,5 +1,5 @@
 const express = require('express');
-const { registerUser, userLogin, userDetails, fetchAllUsers } = require('../../controllers/Users/userController');
+const { registerUser, userLogin, userDetails, fetchAllUsers, stripePrices, userPasswordUpdate } = require('../../controllers/Users/userController');
 const userAuth = require("../../middleware/auth/Auth.js")
 
 const route = express.Router();
@@ -8,6 +8,10 @@ route.post('/register',registerUser);
 route.post('/login',userLogin);
 route.get('/userDetails',userAuth ,userDetails);
 route.get('/allUsers',fetchAllUsers);
+route.get('/stripePrices',userAuth,stripePrices);
+route.put('/updatePassword',userAuth,userPasswordUpdate);
+
+
 
 
 module.exports = route; 

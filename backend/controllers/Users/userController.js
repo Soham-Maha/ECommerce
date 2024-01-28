@@ -137,9 +137,74 @@ const fetchAllUsers = asyncHandler(async(req,res)=>{
   }
 })
 
+//get all stripe subcriptions
+const stripePrices = asyncHandler(async(req,res)=>{
+  try {
+    const prices = await stripe.prices.list();
+    const pricesdata = prices?.data;
+    res.status(200).json({
+      success:true,
+      pricesdata,
+    });
+  } catch (error) {
+    res.status(401).json({
+      success:false,
+      message:error.message,
+    });
+  }
+})
+
+//user change passwords
+const userPasswordUpdate = asyncHandler(async(req,res)=>{
+  const {password} = req?.body;
+  const id =req?.user?._id;
+
+  try {
+    const user = await User.findById(id);
+    
+    const comparePassword = await bcrypt.compare(password,user?.password);
+    if(comparePassword){
+      throw new Error("Please enter a different password from the previous password");
+    }
+    else{
+      const salt =await bcrypt.genSalt(10);
+      const encryptedPassword = await bcrypt.hash(password, salt);
+
+      user.password =encryptedPassword;
+
+      const updatedUser = await user.save();
+
+      res.status(201).json({
+        updatedUser,
+      })
+    }
+
+  } catch (error) {
+    res.status(401).json({
+      success:false,
+      message:error.message,
+    });
+  }
+});
+
+//reset password Logic/controller
+
+const userPasswordReset = asyncHandler(async(req,res)=>{
+  try {
+    
+  } catch (error) {
+    res.status(401).json({
+      success:false,
+      message:error.message,
+    });
+  }
+})
+
 module.exports = {
   registerUser,
   userLogin,
   userDetails,
   fetchAllUsers,
+  stripePrices,
+  userPasswordUpdate,
 };
