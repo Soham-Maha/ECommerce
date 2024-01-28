@@ -190,8 +190,15 @@ const userPasswordUpdate = asyncHandler(async(req,res)=>{
 //reset password Logic/controller
 
 const userPasswordReset = asyncHandler(async(req,res)=>{
+  const {email} = req?.body;
   try {
-    
+    const user = await User.findOne({email:email});
+
+    if(user){
+      throw new Error("Please Resgister!User does not exists")
+    }
+
+    const resetPasswordToken = await user.createPasswordResetToken();
   } catch (error) {
     res.status(401).json({
       success:false,
