@@ -199,6 +199,8 @@ const userPasswordReset = asyncHandler(async(req,res)=>{
     }
 
     const resetPasswordToken = await user.createPasswordResetToken();
+
+    user.passwordResetToken = resetPasswordToken
   } catch (error) {
     res.status(401).json({
       success:false,
