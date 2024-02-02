@@ -194,7 +194,7 @@ const userPasswordReset = asyncHandler(async(req,res)=>{
   try {
     const user = await User.findOne({email:email});
 
-    if(user){
+    if(!user){
       throw new Error("Please Resgister!User does not exists")
     }
 
@@ -203,7 +203,139 @@ const userPasswordReset = asyncHandler(async(req,res)=>{
     user.passwordResetToken = resetPasswordToken;
 
     await user.save();
+
+    //send a token to the email and a verification button
+
+    const resetURL = `If you want to reset your password click here: <a href="http://localhost:300/forgot-password-reset/${resetPasswordToken}">Reset Password</a>`;
+
+    const msg = {
+      to: email,
+      from: "sohammaha15@gmail.com",
+      subject: "Reset Password",
+      html:resetURL,
+    };
+
+    await sgMail.send(msg);
+
+    res.status(200).json(
+      `A reset email was sent to ${email}. The reset url: ${resetURL}`
+    )
     
+  } catch (error) {
+    res.status(401).json({
+      success:false,
+      message:error.message,
+    });
+  }
+})
+
+//user reset password logic after email has been clicked
+const userPasswordResetAfterClick = asyncHandler(async(req,res)=>{
+  const {password,token} = req?.body;
+
+  try {
+    //find if a user exists with the token
+    const user = await User.findOne({
+      passwordResetToken: token,
+      passwordResetExpires: {$gt: Date.now()}
+    })
+    //throw a new error if not
+    if(!user) throw new Error("User does not exist! Please Register!");
+    //run if block hash password store password make token undefined save user send status
+    if (user){
+      const salt = await bcrypt.genSalt(10);
+      const encryptedPassword = await bcrypt.hash(password,salt);
+
+      user.password = encryptedPassword;
+      user.passwordResetToken = undefined;
+      user.passwordResetExpires = undefined;
+      await user.save();
+
+      res.status(201).json(user);
+    }
+  } catch (error) {
+    res.status(401).json({
+      success:false,
+      message:error.message,
+    });
+  }
+});
+
+//verify email logic
+const verifyAccount = asyncHandler(async(req,res)=>{
+  const {email} = req?.body;
+  const id =req?.user?._id;
+  try {
+    const user = await User.findById(id);
+
+    if(!user) throw new Error("No user Exists")
+
+    if(user) {
+      const verificationToken = await user.createAccountVerificationToken;
+      await user.save();
+
+      const verifyURL = `If you want to verify your account click here: <a href="http://localhost:300/verify-account/${verificationToken}">Reset Password</a>`;
+
+      const msg = {
+        to: user?.email,
+        from: "sohammaha15@gmail.com",
+        subject: "Verify Account",
+        html: verifyURL,
+      }
+      await sgMail.send(msg);
+
+      res.status(200).json(resetURL)
+    }
+  } catch (error) {
+    res.status(401).json({
+      success:false,
+      message:error.message,
+    });
+  }
+});
+
+//verify user account after clicking the url in the email
+const verifyAccountAfterClick = asyncHandler(async(req,res)=>{
+  //destructuring the variable
+  const {token} =req?.body;
+
+  const hashedToken = crypto.createHash("sha256").update(token).digest("hex");
+
+  const user = await User.findOne({
+    accountVerificationToken: hashedToken,
+    accountVerificationTokenExpires: {$gt: Date.now()},
+  })
+  try {
+    if(!user) throw new Error("Token expired please try again!");
+
+    user.isVerified = true;
+    user.accountVerificationToken = undefined;
+    user.accountVerificationTokenExpires = undefined;
+
+    await user.save();
+    
+    res.status(201).json(user);
+    
+  } catch (error) {
+    res.status(401).json({
+      success:false,
+      message:error.message,
+    });
+  }
+});
+
+//update user logic
+const updateUserfield = asyncHandler(async(req,res)=>{
+  const id = req?.user?._id;
+  try {
+    const user = await User.findByIdAndUpdate(id,{...req?.body}).select("-password");
+
+    if(!user) throw new Error("No user found");
+
+    const updatedUser = await User.findById(id);
+
+    res.status(200).json(updatedUser);
+
   } catch (error) {
     res.status(401).json({
       success:false,
@@ -219,4 +351,9 @@ module.exports = {
   fetchAllUsers,
   stripePrices,
   userPasswordUpdate,
+  userPasswordReset,
+  userPasswordResetAfterClick,
+  verifyAccount,
+  verifyAccountAfterClick,
+  updateUserfield,
 };
