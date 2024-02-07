@@ -342,7 +342,73 @@ const updateUserfield = asyncHandler(async(req,res)=>{
       message:error.message,
     });
   }
-})
+});
+
+//save a product 
+const saveProduct = asyncHandler(async(req,res)=>{
+  const {productId} =req?.body;
+  const id = req?.user?._id;
+  const targetUser = await User.findById(id);
+    const saveLog = targetUser?.saved?.map((prod)=>{
+      return prod?._id;
+    });
+
+    const isSaved = targetUser?.saved?.includes(productId);
+    if(isSaved) throw new Error("Already Saved this product");
+
+  try {
+    const user = await User.findByIdAndUpdate(id,{
+      $push: {saved: productId}
+    },{new:true});
+
+    const updatedUser = await User.findById(id).populate("saved");
+
+    //send the status code and user 
+    res.status(200).json(updatedUser);
+
+
+  } catch (error) {
+    res.status(401).json({
+      success:false,
+      message:error.message,
+    });
+  }
+});
+
+//unsave the product
+const unSaveProduct = asyncHandler(async(req,res)=>{
+  const {productId} =req?.body;
+  const id = req?.user?._id;
+  const targetUser = await User.findById(id);
+    const saveLog = targetUser?.saved?.map((prod)=>{
+      return prod?._id;
+    });
+
+
+    const isSaved = targetUser?.saved?.includes(productId);
+
+    
+    
+    try {
+      if(isSaved){
+        const user = await User.findByIdAndUpdate(id,{
+          $pull:{saved:productId},
+        },{new:true});
+      }
+
+      const updatedUser = await User.findById(id).populate("saved");
+
+      res.status(200).json(updatedUser);
+    
+  } catch (error) {
+    res.status(401).json({
+      success:false,
+      message:error.message,
+    });
+  }
+});
+
+
 
 module.exports = {
   registerUser,
@@ -356,4 +422,6 @@ module.exports = {
   verifyAccount,
   verifyAccountAfterClick,
   updateUserfield,
+  saveProduct,
+  unSaveProduct,
 };

@@ -1,5 +1,5 @@
 const express = require('express');
-const { registerUser, userLogin, userDetails, fetchAllUsers, stripePrices, userPasswordUpdate, userPasswordReset, userPasswordResetAfterClick ,verifyAccount, verifyAccountAfterClick, updateUserfield} = require('../../controllers/Users/userController');
+const { registerUser, userLogin, userDetails, fetchAllUsers, stripePrices, userPasswordUpdate, userPasswordReset, userPasswordResetAfterClick ,verifyAccount, verifyAccountAfterClick, updateUserfield, saveProduct, unSaveProduct} = require('../../controllers/Users/userController');
 const userAuth = require("../../middleware/auth/Auth.js")
 
 const route = express.Router();
@@ -15,8 +15,6 @@ route.put('/passwordResetAfter',userPasswordResetAfterClick);
 route.post('/verifyAccount',userAuth,verifyAccount);
 route.put('/verifyAccountAfter',userAuth,verifyAccountAfterClick);
 route.put('/updateUser',userAuth,updateUserfield);
-
-
-
- 
+route.put('/saveProduct',userAuth,saveProduct);
+route.put('/unSaveProduct',userAuth,unSaveProduct);
 module.exports = route; 
