@@ -45,9 +45,14 @@ const UserSchema = new mongoose.Schema(
     role: {
       type: String,
       enum: ["subsciber", "Admin", "freeuser", "influencer"],
+      default: "freeuser",
     },
     isSubscibed: {
       type: String,
+    },
+    isSubCanceled: {
+      type: String,
+      enum: ["Active", "ActiveTillEnd"],
     },
     saved: {
       type: [

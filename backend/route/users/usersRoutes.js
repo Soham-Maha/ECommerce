@@ -1,5 +1,5 @@
 const express = require('express');
-const { registerUser, userLogin, userDetails, fetchAllUsers, stripePrices, userPasswordUpdate, userPasswordReset, userPasswordResetAfterClick ,verifyAccount, verifyAccountAfterClick, updateUserfield, saveProduct, unSaveProduct} = require('../../controllers/Users/userController');
+const { registerUser, userLogin, userDetails, fetchAllUsers, stripePrices, userPasswordUpdate, userPasswordReset, userPasswordResetAfterClick ,verifyAccount, verifyAccountAfterClick, updateUserfield, saveProduct, unSaveProduct, createSubWindow, subStatusUpdate, customerPortal, updateSubAfterCancel, renewSub} = require('../../controllers/Users/userController');
 const userAuth = require("../../middleware/auth/Auth.js")
 
 const route = express.Router();
@@ -17,4 +17,12 @@ route.put('/verifyAccountAfter',userAuth,verifyAccountAfterClick);
 route.put('/updateUser',userAuth,updateUserfield);
 route.put('/saveProduct',userAuth,saveProduct);
 route.put('/unSaveProduct',userAuth,unSaveProduct);
+route.post('/createSessionsStripe',userAuth,createSubWindow);
+route.put('/subStatusUpdate',userAuth,subStatusUpdate);
+route.get('/customerPortal',userAuth,customerPortal);
+route.put('/subStatusUpdateCancel',userAuth,updateSubAfterCancel);
+route.put('/subStatusUpdateRenew',userAuth,renewSub);
+
+
+
 module.exports = route; 
