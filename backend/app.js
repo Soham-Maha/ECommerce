@@ -7,6 +7,7 @@ const dbconnection = require("./config/DBconnection.js");
 const cookieparser = require('cookie-parser');
 const cors = require('cors');
 const userRoutes = require('./route/users/usersRoutes.js')
+const productRoutes = require("./route/products/productRoutes.js")
 
 
 app.use(express.json());
@@ -20,6 +21,7 @@ app.get('/',(req,res)=>{
 });
 
 app.use('/api/users',userRoutes)
+app.use('/api/products',productRoutes)
 
 //connect to the database mongodb
 dbconnection();
