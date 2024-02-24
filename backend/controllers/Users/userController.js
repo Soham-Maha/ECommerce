@@ -62,7 +62,7 @@ const registerUser = asyncHandler(async (req, res) => {
 const userLogin = asyncHandler(async (req, res) => {
   const { email, password } = req?.body;
   try {
-    const emailExists = await User.findOne({ email: email });
+    const emailExists = await User.findOne({ email: email }).populate('saved');
 
     if (!emailExists) {
       throw new Error("User does not exist! Please Register!");
@@ -109,7 +109,7 @@ const userLogin = asyncHandler(async (req, res) => {
 const userDetails = asyncHandler(async (req, res) => {
   const id = req?.user?._id;
   try {
-    const user = await User.findById(id).select("-password ");
+    const user = await User.findById(id).select("-password").populate('saved');
     res.status(200).json({
       success: true,
       user,
@@ -334,7 +334,7 @@ const updateUserfield = asyncHandler(async (req, res) => {
 
     if (!user) throw new Error("No user found");
 
-    const updatedUser = await User.findById(id);
+    const updatedUser = await User.findById(id).populate('saved');
 
     res.status(200).json(updatedUser);
   } catch (error) {
@@ -463,7 +463,7 @@ const subStatusUpdate = asyncHandler(async (req, res) => {
       { new: true }
     );
 
-    const updatedUser = await User.findById(id);
+    const updatedUser = await User.findById(id).populate('saved');
 
     res.status(200).json(updatedUser);
   } catch (error) {
