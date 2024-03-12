@@ -1,7 +1,39 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import {useFormik} from 'formik';
+import {useDispatch,useSelector} from 'react-redux';
+import * as Yup from 'yup';
+import {registerUserAction} from '../../redux/slices/users/usersSlices.js';
+
+//yup form schema
+const formSchema = Yup.object({
+  email: Yup.string().required("Email is required!"),
+  password: Yup.string().required("Password is required!"),
+  name: Yup.string().required("Name is required!"),
+  surname: Yup.string().required("Surname is required!"),
+});
+
 
 const Register = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  //formik form values  
+  const formik = useFormik({
+    initialValues:{
+      email:"",
+      name:"",
+      password:"",
+      surname:""
+    },
+    onSubmit: (values)=>{
+      dispatch(registerUserAction(values))
+    }
+  });
+
+
+
+
   const [first, setfirst] = useState(false);
   return (
     <div className="font-poppins overflow-hidden max-w-screen">

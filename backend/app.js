@@ -6,8 +6,8 @@ const PORT = 5000;
 const dbconnection = require("./config/DBconnection.js");
 const cookieparser = require("cookie-parser");
 const cors = require("cors");
-const userRoutes = require("./route/users/usersRoutes.js");
-const productRoutes = require("./route/products/productRoutes.js");
+const userRoutes = require("./routes/users/usersRoutes.js");
+const productRoutes = require("./routes/products/productRoutes.js");
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
