@@ -1,9 +1,9 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import {useFormik} from 'formik';
-import {useDispatch,useSelector} from 'react-redux';
-import * as Yup from 'yup';
-import {registerUserAction} from '../../redux/slices/users/usersSlices.js';
+import { useFormik } from "formik";
+import { useDispatch, useSelector } from "react-redux";
+import * as Yup from "yup";
+import { registerUserAction } from "../../redux/slices/users/usersSlices.js";
 
 //yup form schema
 const formSchema = Yup.object({
@@ -13,26 +13,36 @@ const formSchema = Yup.object({
   surname: Yup.string().required("Surname is required!"),
 });
 
-
 const Register = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  //formik form values  
+  //formik form values
   const formik = useFormik({
-    initialValues:{
-      email:"",
-      name:"",
-      password:"",
-      surname:""
+    initialValues: {
+      email: "",
+      name: "",
+      password: "",
+      surname: "",
     },
-    onSubmit: (values)=>{
-      dispatch(registerUserAction(values))
-    }
+    onSubmit: (values) => {
+      dispatch(registerUserAction(values));
+    },
+    validationSchema: formSchema,
   });
 
+  const storeData = useSelector((state) => state?.users);
 
+  const { loading, appErr, serverErr, user } = storeData;
 
+  //redirect when user is registered successfully
+  
+  useEffect(() => {
+    if (user) {
+      navigate("/");
+    }
+  }, [dispatch, user])
+  
 
   const [first, setfirst] = useState(false);
   return (
@@ -49,9 +59,12 @@ const Register = () => {
                     </h1>
                   </Link>
                 </div>
-                <form>
+                <form onSubmit={formik.handleSubmit}>
                   <div class="mb-6">
                     <input
+                      value={formik.values.name}
+                      onChange={formik.handleChange("name")}
+                      onBlur={formik.handleBlur("name")}
                       type="name"
                       placeholder="Name"
                       class="bordder-[#E9EDF4] w-full rounded-md border bg-[#FCFDFE] py-3 px-5 text-base text-body-color placeholder-[#ACB6BE] outline-none focus:border-primary focus-visible:shadow-none"
@@ -59,6 +72,9 @@ const Register = () => {
                   </div>
                   <div class="mb-6">
                     <input
+                      value={formik.values.surname}
+                      onChange={formik.handleChange("surname")}
+                      onBlur={formik.handleBlur("surname")}
                       type="surname"
                       placeholder="Surname"
                       class="bordder-[#E9EDF4] w-full rounded-md border bg-[#FCFDFE] py-3 px-5 text-base text-body-color placeholder-[#ACB6BE] outline-none focus:border-primary focus-visible:shadow-none"
@@ -66,6 +82,9 @@ const Register = () => {
                   </div>
                   <div class="mb-6">
                     <input
+                      value={formik.values.email}
+                      onChange={formik.handleChange("email")}
+                      onBlur={formik.handleBlur("email")}
                       type="email"
                       placeholder="Email"
                       class="bordder-[#E9EDF4] w-full rounded-md border bg-[#FCFDFE] py-3 px-5 text-base text-body-color placeholder-[#ACB6BE] outline-none focus:border-primary focus-visible:shadow-none"
@@ -73,6 +92,9 @@ const Register = () => {
                   </div>
                   <div class="mb-6">
                     <input
+                      value={formik.values.password}
+                      onChange={formik.handleChange("password")}
+                      onBlur={formik.handleBlur("password")}
                       type="password"
                       placeholder="Password"
                       class="bordder-[#E9EDF4] w-full rounded-md border bg-[#FCFDFE] py-3 px-5 text-base text-body-color placeholder-[#ACB6BE] outline-none focus:border-primary focus-visible:shadow-none"
@@ -86,6 +108,7 @@ const Register = () => {
                       Register
                     </button>
                     {/* app error code snipet here */}
+                    {appErr || serverErr ?(<p className="text-red-500 font-medium mt-4 border rounded-md py-2 bg-red-50">{appErr || serverErr ?`${appErr}`:null}</p>):null}
                   </div>
                 </form>
                 <p class="text-base text-[#adadad]">

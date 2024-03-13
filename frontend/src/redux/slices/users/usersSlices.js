@@ -9,7 +9,13 @@ export const registerUserAction = createAsyncThunk(
   "register/user",
   async (user, { rejectWithValue, getState, dispatch }) => {
     try {
-      const {data} = await axios.post(`${baseURL}/api/users/register`, user, config);
+      const sendData = {
+        firstName:user.name,
+        lastName:user.surname,
+        email:user.email,
+        password:user.password
+      }
+      const {data} = await axios.post(`${baseURL}/api/users/register`, sendData, config);
 
       //after user registers store him to local store
       localStorage.setItem("userInfo",JSON.stringify(data.createdUser));
@@ -26,10 +32,29 @@ export const registerUserAction = createAsyncThunk(
   }
 );
 
+//login user action
+
+
+//get user from local state and put him in the store 
+let userAuth;
+
+const userInfoToStr = localStorage.getItem("userInfo");
+
+if(userInfoToStr && userInfoToStr !==undefined) {
+  try {
+    userAuth = JSON.parse(userInfoToStr)
+  } catch (error) {
+    console.log("Failed to parse userInfor from localStorage",error);
+    userAuth= null;
+  }
+}else{
+  userAuth = null
+}
+
 const userSlice = createSlice({
   name: "users",
   initialState: {
-    user: "User",
+    user: userAuth,
   },
   extraReducers: (builder) => {
     builder.addCase(redirectRegister,(state,action)=>{
