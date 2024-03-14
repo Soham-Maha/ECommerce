@@ -1,54 +1,45 @@
-import React, { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { useFormik } from "formik";
-import { useDispatch, useSelector } from "react-redux";
-import * as Yup from "yup";
-import { registerUserAction } from "../../redux/slices/users/usersSlices.js";
+import {React, useEffect} from 'react';
+import {Link, useNavigate} from 'react-router-dom';
+import { useFormik } from 'formik';
+import { UseDispatch, useDispatch, useSelector } from 'react-redux';
+import * as Yup from 'yup';
+import { loginUserAction } from '../../redux/slices/users/usersSlices';
 
-//yup form schema
+//the form schema to check for validation
 const formSchema = Yup.object({
-  email: Yup.string().required("Email is required!"),
-  password: Yup.string().required("Password is required!"),
-  name: Yup.string().required("Name is required!"),
-  surname: Yup.string().required("Surname is required!"),
+  email:Yup.string().required("Email is required"),
+  password:Yup.string().required("Password is required")
 });
 
-const Register = () => {
+const Login = () => {
+
+  //configure dispatch and navigate
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  //formik form values
+  //formik form
   const formik = useFormik({
-    initialValues: {
-      email: "",
-      name: "",
-      password: "",
-      surname: "",
+    initialValues:{
+      email:"",
+      password:""
     },
-    onSubmit: (values) => {
-      dispatch(registerUserAction(values));
+    onSubmit:(values)=>{
+      dispatch(loginUserAction(values))
     },
-    validationSchema: formSchema,
+    validationSchema: formSchema
   });
 
-  const storeData = useSelector((state) => state?.users);
+  //get the store data
+  const storeData = useSelector((state)=> state?.users);
+  const {loading, appErr, serverErr, redirectLogin, user} = storeData;
 
-  const { loading, appErr, serverErr, user } = storeData;
-
-  //redirect when user is registered successfully
+  //redirect if the login is successful
   if (user) {
     navigate("/");
   }
-  // useEffect(() => {
-  //   if (user) {
-  //     navigate("/");
-  //   }
-  // }, [dispatch, user])
-  
 
-  const [first, setfirst] = useState(false);
   return (
-    <div className="font-poppins overflow-hidden max-w-screen">
+    <div className="font-poppins overflow-hidden max-w-screen ">
       <section class="bg-[#F4F7FF] py-20 lg:py-[120px] h-screen">
         <div class="container mx-auto">
           <div class="-mx-4 flex flex-wrap">
@@ -64,29 +55,6 @@ const Register = () => {
                 <form onSubmit={formik.handleSubmit}>
                   <div class="mb-6">
                     <input
-                      value={formik.values.name}
-                      onChange={formik.handleChange("name")}
-                      onBlur={formik.handleBlur("name")}
-                      type="name"
-                      placeholder="Name"
-                      class="bordder-[#E9EDF4] w-full rounded-md border bg-[#FCFDFE] py-3 px-5 text-base text-body-color placeholder-[#ACB6BE] outline-none focus:border-primary focus-visible:shadow-none"
-                    />
-                  </div>
-                  <div class="mb-6">
-                    <input
-                      value={formik.values.surname}
-                      onChange={formik.handleChange("surname")}
-                      onBlur={formik.handleBlur("surname")}
-                      type="surname"
-                      placeholder="Surname"
-                      class="bordder-[#E9EDF4] w-full rounded-md border bg-[#FCFDFE] py-3 px-5 text-base text-body-color placeholder-[#ACB6BE] outline-none focus:border-primary focus-visible:shadow-none"
-                    />
-                  </div>
-                  <div class="mb-6">
-                    <input
-                      value={formik.values.email}
-                      onChange={formik.handleChange("email")}
-                      onBlur={formik.handleBlur("email")}
                       type="email"
                       placeholder="Email"
                       class="bordder-[#E9EDF4] w-full rounded-md border bg-[#FCFDFE] py-3 px-5 text-base text-body-color placeholder-[#ACB6BE] outline-none focus:border-primary focus-visible:shadow-none"
@@ -94,9 +62,6 @@ const Register = () => {
                   </div>
                   <div class="mb-6">
                     <input
-                      value={formik.values.password}
-                      onChange={formik.handleChange("password")}
-                      onBlur={formik.handleBlur("password")}
                       type="password"
                       placeholder="Password"
                       class="bordder-[#E9EDF4] w-full rounded-md border bg-[#FCFDFE] py-3 px-5 text-base text-body-color placeholder-[#ACB6BE] outline-none focus:border-primary focus-visible:shadow-none"
@@ -107,16 +72,21 @@ const Register = () => {
                       type="submit"
                       class="bordder-primary w-full cursor-pointer rounded-md border bg-blue-400 py-3 px-5 text-base text-white transition hover:bg-opacity-90"
                     >
-                      Register
+                      Login
                     </button>
-                    {/* app error code snipet here */}
-                    {appErr || serverErr ?(<p className="text-red-500 font-medium mt-4 border rounded-md py-2 bg-red-50">{appErr || serverErr ?`${appErr}`:null}</p>):null}
+                    {/* app or server error code snipet */}
                   </div>
                 </form>
+                <Link
+                  to={"/password-reset"}
+                  class="mb-2 inline-block text-base text-[#adadad] hover:text-primary hover:underline"
+                >
+                  Forget Password?
+                </Link>
                 <p class="text-base text-[#adadad]">
-                  Already a Member?{" "}
-                  <Link to={"/login"} class="text-primary hover:underline">
-                    Login
+                  Not a member yet?{" "}
+                  <Link to={"/register"} class="text-primary hover:underline">
+                    Sign Up
                   </Link>
                 </p>
                 <div>
@@ -344,6 +314,6 @@ const Register = () => {
       </section>
     </div>
   );
-};
+}
 
-export default Register;
+export default Login
