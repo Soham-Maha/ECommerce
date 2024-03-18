@@ -36,14 +36,14 @@ const Register = () => {
   const { loading, appErr, serverErr, user } = storeData;
 
   //redirect when user is registered successfully
-  if (user) {
-    navigate("/");
-  }
-  // useEffect(() => {
-  //   if (user) {
-  //     navigate("/");
-  //   }
-  // }, [dispatch, user])
+  // if (user) {
+  //   navigate("/");
+  // }
+  useEffect(() => {
+    if (user) {
+      navigate("/");
+    }
+  }, [dispatch, user])
   
 
   const [first, setfirst] = useState(false);
@@ -109,7 +109,6 @@ const Register = () => {
                     >
                       Register
                     </button>
-                    {/* app error code snipet here */}
                     {appErr || serverErr ?(<p className="text-red-500 font-medium mt-4 border rounded-md py-2 bg-red-50">{appErr || serverErr ?`${appErr}`:null}</p>):null}
                   </div>
                 </form>

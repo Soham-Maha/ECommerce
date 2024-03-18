@@ -1,42 +1,46 @@
-import {React, useEffect} from 'react';
-import {Link, useNavigate} from 'react-router-dom';
-import { useFormik } from 'formik';
-import { UseDispatch, useDispatch, useSelector } from 'react-redux';
-import * as Yup from 'yup';
-import { loginUserAction } from '../../redux/slices/users/usersSlices';
+import { React, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useFormik } from "formik";
+import { UseDispatch, useDispatch, useSelector } from "react-redux";
+import * as Yup from "yup";
+import { loginUserAction } from "../../redux/slices/users/usersSlices";
 
 //the form schema to check for validation
 const formSchema = Yup.object({
-  email:Yup.string().required("Email is required"),
-  password:Yup.string().required("Password is required")
+  email: Yup.string().required("Email is required"),
+  password: Yup.string().required("Password is required"),
 });
 
 const Login = () => {
-
   //configure dispatch and navigate
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   //formik form
   const formik = useFormik({
-    initialValues:{
-      email:"",
-      password:""
+    initialValues: {
+      email: "",
+      password: "",
     },
-    onSubmit:(values)=>{
-      dispatch(loginUserAction(values))
+    onSubmit: (values) => {
+      dispatch(loginUserAction(values));
     },
-    validationSchema: formSchema
+    validationSchema: formSchema,
   });
 
   //get the store data
-  const storeData = useSelector((state)=> state?.users);
-  const {loading, appErr, serverErr, redirectLogin, user} = storeData;
+  const storeData = useSelector((state) => state?.users);
+  const { loading, appErr, serverErr, redirectLogin, user } = storeData;
 
   //redirect if the login is successful
-  if (user) {
-    navigate("/");
-  }
+  // if (user) {
+  //   navigate("/");
+  // }
+  useEffect(() => {
+    if (user) {
+      navigate("/");
+    }
+  }, [dispatch, user])
 
   return (
     <div className="font-poppins overflow-hidden max-w-screen ">
@@ -55,6 +59,9 @@ const Login = () => {
                 <form onSubmit={formik.handleSubmit}>
                   <div class="mb-6">
                     <input
+                      value={formik.values.email}
+                      onChange={formik.handleChange("email")}
+                      onBlur={formik.handleBlur("email")}
                       type="email"
                       placeholder="Email"
                       class="bordder-[#E9EDF4] w-full rounded-md border bg-[#FCFDFE] py-3 px-5 text-base text-body-color placeholder-[#ACB6BE] outline-none focus:border-primary focus-visible:shadow-none"
@@ -62,6 +69,9 @@ const Login = () => {
                   </div>
                   <div class="mb-6">
                     <input
+                      value={formik.values.password}
+                      onChange={formik.handleChange("password")}
+                      onBlur={formik.handleBlur("password")}
                       type="password"
                       placeholder="Password"
                       class="bordder-[#E9EDF4] w-full rounded-md border bg-[#FCFDFE] py-3 px-5 text-base text-body-color placeholder-[#ACB6BE] outline-none focus:border-primary focus-visible:shadow-none"
@@ -74,7 +84,7 @@ const Login = () => {
                     >
                       Login
                     </button>
-                    {/* app or server error code snipet */}
+                    {appErr || serverErr ?(<p className="text-red-500 font-medium mt-4 border rounded-md py-2 bg-red-50">{appErr || serverErr ?`${appErr}`:null}</p>):null}
                   </div>
                 </form>
                 <Link
@@ -314,6 +324,6 @@ const Login = () => {
       </section>
     </div>
   );
-}
+};
 
-export default Login
+export default Login;
