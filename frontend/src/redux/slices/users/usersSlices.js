@@ -66,23 +66,42 @@ export const loginUserAction = createAsyncThunk(
 );
 
 //logout action
-export const logoutAction = createAsyncThunk('logout/user', async(payload,{rejectWithValue, getState, dispatch})=>{
-  try {
-    //remove user from browser
-    localStorage.removeItem("userInfo");
-    localStorage.removeItem("token");
+export const logoutAction = createAsyncThunk(
+  "logout/user",
+  async (payload, { rejectWithValue, getState, dispatch }) => {
+    try {
+      //remove user from browser
+      localStorage.removeItem("userInfo");
+      localStorage.removeItem("token");
 
-    //dispatch redirect action
-    dispatch(redirectLogout());
-
-
-  } catch (error) {
-    if (!error?.response) {
-      throw error;
+      //dispatch redirect action
+      dispatch(redirectLogout());
+    } catch (error) {
+      if (!error?.response) {
+        throw error;
+      }
+      return rejectWithValue(error?.response?.data);
     }
-    return rejectWithValue(error?.response?.data);
   }
-});
+);
+
+//get all of the user details
+export const userDetailsAction = createAsyncThunk(
+  "user/details",
+  async (payload, { rejectWithValue, getState, dispatch }) => {
+    const user = getState()?.users?.userAuth;
+    try {
+      const {data} = await axios.get(`${baseURL}/api/users/userDetails`,config);
+      localStorage.setItem("userInfo",JSON.stringify(data?.user));
+      return data;
+    } catch (error) {
+      if (!error?.response) {
+        throw error;
+      }
+      return rejectWithValue(error?.response?.data);
+    }
+  }
+);
 
 //get user from local state and put him in the store
 let userAuth;
@@ -145,7 +164,6 @@ const userSlice = createSlice({
       state.appErr = action?.payload?.message;
     });
     //logout a user
-    //login a user
     builder.addCase(redirectLogout, (state, action) => {
       state.redirectLogout = true;
     });
@@ -160,6 +178,22 @@ const userSlice = createSlice({
       state.appErr = undefined;
     });
     builder.addCase(logoutAction.rejected, (state, action) => {
+      state.loading = false;
+      state.serverError = action?.payload?.message;
+      state.appErr = action?.payload?.message;
+    });
+    //get user details
+    builder.addCase(userDetailsAction.pending, (state, action) => {
+      state.loading = true;
+    });
+    builder.addCase(userDetailsAction.fulfilled, (state, action) => {
+      state.loading = false;
+      state.user = action?.payload?.user;
+      state.userDetails = action?.payload?.user;
+      state.serverError = undefined;
+      state.appErr = undefined;
+    });
+    builder.addCase(userDetailsAction.rejected, (state, action) => {
       state.loading = false;
       state.serverError = action?.payload?.message;
       state.appErr = action?.payload?.message;
