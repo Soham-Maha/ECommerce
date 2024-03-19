@@ -36,14 +36,14 @@ const Register = () => {
   const { loading, appErr, serverErr, user } = storeData;
 
   //redirect when user is registered successfully
-  // if (user) {
-  //   navigate("/");
-  // }
-  useEffect(() => {
-    if (user) {
-      navigate("/");
-    }
-  }, [dispatch, user])
+  if (user) {
+    navigate("/");
+  }
+  // useEffect(() => {
+  //   if (user) {
+  //     navigate("/");
+  //   }
+  // }, [dispatch, user])
   
 
   const [first, setfirst] = useState(false);

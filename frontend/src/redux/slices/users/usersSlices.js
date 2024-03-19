@@ -5,6 +5,7 @@ import { baseURL, config } from "../../../utils/baseURL";
 //redirect actions
 const redirectRegister = createAction("redirect/register");
 const redirectLogin = createAction("redirect/login");
+const redirectLogout = createAction("redirect/logout");
 
 export const registerUserAction = createAsyncThunk(
   "register/user",
@@ -64,6 +65,25 @@ export const loginUserAction = createAsyncThunk(
   }
 );
 
+//logout action
+export const logoutAction = createAsyncThunk('logout/user', async(payload,{rejectWithValue, getState, dispatch})=>{
+  try {
+    //remove user from browser
+    localStorage.removeItem("userInfo");
+    localStorage.removeItem("token");
+
+    //dispatch redirect action
+    dispatch(redirectLogout());
+
+
+  } catch (error) {
+    if (!error?.response) {
+      throw error;
+    }
+    return rejectWithValue(error?.response?.data);
+  }
+});
+
 //get user from local state and put him in the store
 let userAuth;
 
@@ -120,6 +140,26 @@ const userSlice = createSlice({
       state.appErr = undefined;
     });
     builder.addCase(loginUserAction.rejected, (state, action) => {
+      state.loading = false;
+      state.serverError = action?.payload?.message;
+      state.appErr = action?.payload?.message;
+    });
+    //logout a user
+    //login a user
+    builder.addCase(redirectLogout, (state, action) => {
+      state.redirectLogout = true;
+    });
+    builder.addCase(logoutAction.pending, (state, action) => {
+      state.loading = true;
+    });
+    builder.addCase(logoutAction.fulfilled, (state, action) => {
+      state.loading = false;
+      state.redirectLogout = false;
+      state.user = null;
+      state.serverError = undefined;
+      state.appErr = undefined;
+    });
+    builder.addCase(logoutAction.rejected, (state, action) => {
       state.loading = false;
       state.serverError = action?.payload?.message;
       state.appErr = action?.payload?.message;

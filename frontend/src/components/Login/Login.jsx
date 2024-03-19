@@ -1,7 +1,7 @@
 import { React, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
-import { UseDispatch, useDispatch, useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import * as Yup from "yup";
 import { loginUserAction } from "../../redux/slices/users/usersSlices";
 
@@ -33,14 +33,9 @@ const Login = () => {
   const { loading, appErr, serverErr, redirectLogin, user } = storeData;
 
   //redirect if the login is successful
-  // if (user) {
-  //   navigate("/");
-  // }
-  useEffect(() => {
-    if (user) {
-      navigate("/");
-    }
-  }, [dispatch, user])
+  if (user) {
+    navigate("/");
+  }
 
   return (
     <div className="font-poppins overflow-hidden max-w-screen ">
