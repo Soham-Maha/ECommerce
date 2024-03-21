@@ -118,10 +118,14 @@ export const saveProductAction = createAsyncThunk(
     };
 
     try {
-      const {data} = await axios.put(`${baseURL}/api/users/saveProduct`, sendId, config);
+      const { data } = await axios.put(
+        `${baseURL}/api/users/saveProduct`,
+        sendId,
+        config
+      );
 
       //update the local storage and user
-      localStorage.setItem("userInfo",JSON.stringify(data?.updatedUser));
+      localStorage.setItem("userInfo", JSON.stringify(data?.updatedUser));
 
       return data;
     } catch (error) {
@@ -132,6 +136,38 @@ export const saveProductAction = createAsyncThunk(
     }
   }
 );
+
+//unsave a product
+export const unsaveProductAction = createAsyncThunk(
+  "unsave/product",
+  async (payload, { rejectWithValue, getState, dispatch }) => {
+    //send back the id in proper format
+    const sendId = {
+      productId: payload,
+    };
+    try {
+      const { data } = await axios.put(
+        `${baseURL}/api/users/unSaveProduct`,
+        sendId,
+        config
+      );
+
+      
+      //update the local storage and user
+      localStorage.setItem("userInfo", JSON.stringify(data?.updatedUser));
+
+      return data;
+    } catch (error) {
+      if (!error?.response) {
+        throw error;
+      }
+      return rejectWithValue(error?.response?.data);
+    }
+  }
+);
+
+//get subcription prices
+
 
 //get user from local state and put him in the store
 let userAuth;
@@ -239,6 +275,21 @@ const userSlice = createSlice({
       state.appErr = undefined;
     });
     builder.addCase(saveProductAction.rejected, (state, action) => {
+      state.loading = false;
+      state.serverError = action?.payload?.message;
+      state.appErr = action?.payload?.message;
+    });
+    //unsave a product
+    builder.addCase(unsaveProductAction.pending, (state, action) => {
+      state.loading = true;
+    });
+    builder.addCase(unsaveProductAction.fulfilled, (state, action) => {
+      state.loading = false;
+      state.user = action?.payload?.updatedUser;
+      state.serverError = undefined;
+      state.appErr = undefined;
+    });
+    builder.addCase(unsaveProductAction.rejected, (state, action) => {
       state.loading = false;
       state.serverError = action?.payload?.message;
       state.appErr = action?.payload?.message;
