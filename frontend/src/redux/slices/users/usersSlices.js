@@ -167,7 +167,19 @@ export const unsaveProductAction = createAsyncThunk(
 );
 
 //get subcription prices
-
+export const subPricesAction = createAsyncThunk('sub/prices',async(payload,{rejectWithValue, getState, dispatch})=>{
+  try {
+    //hit the endpoint
+    const {data} = await axios.get(`${baseURL}/api/users/stripePrices`, config);
+    //return the data
+    return data;
+  } catch (error) {
+    if (!error?.response) {
+      throw error;
+    }
+    return rejectWithValue(error?.response?.data);
+  }
+})
 
 //get user from local state and put him in the store
 let userAuth;
@@ -290,6 +302,21 @@ const userSlice = createSlice({
       state.appErr = undefined;
     });
     builder.addCase(unsaveProductAction.rejected, (state, action) => {
+      state.loading = false;
+      state.serverError = action?.payload?.message;
+      state.appErr = action?.payload?.message;
+    });
+    //get subcription prices and plans
+    builder.addCase(subPricesAction.pending, (state, action) => {
+      state.loading = true;
+    });
+    builder.addCase(subPricesAction.fulfilled, (state, action) => {
+      state.loading = false;
+      state.subPrices = action?.payload;
+      state.serverError = undefined;
+      state.appErr = undefined;
+    });
+    builder.addCase(subPricesAction.rejected, (state, action) => {
       state.loading = false;
       state.serverError = action?.payload?.message;
       state.appErr = action?.payload?.message;

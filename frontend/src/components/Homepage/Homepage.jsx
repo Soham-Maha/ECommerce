@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import {
   logoutAction,
+  subPricesAction,
   userDetailsAction,
 } from "../../redux/slices/users/usersSlices";
 import Cookies from "js-cookie";
@@ -50,10 +51,16 @@ const Homepage = () => {
         </Link>
       )}
       <button
-        onClick={() => dispatch(userDetailsAction())}
+        onClick={() => dispatch(subPricesAction())}
         className="rounded py-2 mx-2 bg-emerald-500 px-4 font-poppins text-white"
       >
         Get details
+      </button>
+      <button
+        onClick={() => dispatch(userDetailsAction())}
+        className="rounded py-2 mx-2 bg-emerald-500 px-4 font-poppins text-white"
+      >
+        Get stripe Prices
       </button>
     </div>
   );
