@@ -47,6 +47,10 @@ const UserSchema = new mongoose.Schema(
       enum: ["subsciber", "Admin", "freeuser", "influencer"],
       default: "freeuser",
     },
+    isBlocked:{
+      type: Boolean,
+      default: false,
+    },
     isSubscibed: {
       type: String,
     },

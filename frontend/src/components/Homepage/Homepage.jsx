@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import {
   logoutAction,
+  sendEmailAction,
   subPricesAction,
   userDetailsAction,
 } from "../../redux/slices/users/usersSlices";
@@ -51,16 +52,22 @@ const Homepage = () => {
         </Link>
       )}
       <button
-        onClick={() => dispatch(subPricesAction())}
+        onClick={() => dispatch(userDetailsAction())}
         className="rounded py-2 mx-2 bg-emerald-500 px-4 font-poppins text-white"
       >
         Get details
       </button>
       <button
-        onClick={() => dispatch(userDetailsAction())}
-        className="rounded py-2 mx-2 bg-emerald-500 px-4 font-poppins text-white"
+        onClick={() => dispatch(subPricesAction())}
+        className="rounded py-2 mx-2 bg-emerald-300 px-4 font-poppins text-white"
       >
         Get stripe Prices
+      </button>
+      <button
+        onClick={() => dispatch(sendEmailAction())}
+        className="rounded py-2 mx-2 bg-orange-600 px-4 font-poppins text-white"
+      >
+        Send Email
       </button>
     </div>
   );
