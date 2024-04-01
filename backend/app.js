@@ -8,6 +8,7 @@ const cookieparser = require("cookie-parser");
 const cors = require("cors");
 const userRoutes = require("./routes/users/usersRoutes.js");
 const productRoutes = require("./routes/products/productRoutes.js");
+const emailrouter = require("./routes/emailRoutes/emailRoutes.js");
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -21,6 +22,7 @@ app.get("/", (req, res) => {
 
 app.use("/api/users", userRoutes);
 app.use("/api/products", productRoutes);
+app.use("/api/email", emailrouter);
 
 //connect to the database mongodb
 dbconnection();

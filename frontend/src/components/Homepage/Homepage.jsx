@@ -63,12 +63,6 @@ const Homepage = () => {
       >
         Get stripe Prices
       </button>
-      <button
-        onClick={() => dispatch(sendEmailAction())}
-        className="rounded py-2 mx-2 bg-orange-600 px-4 font-poppins text-white"
-      >
-        Send Email
-      </button>
     </div>
   );
 };

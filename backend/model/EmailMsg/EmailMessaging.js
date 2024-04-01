@@ -28,7 +28,7 @@ const emailMsgSchema = new mongoose.Schema(
     },
     isFlagged: {
       type: String,
-      required: true,
+      // required: true,
     },
   },
   {

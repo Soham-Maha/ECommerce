@@ -29,11 +29,31 @@ const sendEmailMsgCtrl = asyncHandler(async (req, res) => {
     }
 
     //build up the email object
+    const msg = {
+      to: "sohammaha15@gmail.com",
+      subject: subject,
+      text: messageAndEmail,
+      from: "sohammaha15@gmail.com"
+    }
 
-    
+    //send the email
+    await sgMail.send(msg);
 
+    //save to our database
+    const emailMsg = await EmailMsg.create({
+      sendBy: user?._id,
+      fromEmail: user?.email,
+      toEmail: to,
+      message: message,
+      subject: subject,
+      recipientEmail: recipientEmail
+    });
+
+    res.status(201).json("Email Send");
 
   } catch (error) {
     res.status(500).json(error);
   }
 });
+
+module.exports = {sendEmailMsgCtrl};

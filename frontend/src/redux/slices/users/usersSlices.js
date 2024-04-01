@@ -6,6 +6,7 @@ import { baseURL, config } from "../../../utils/baseURL";
 const redirectRegister = createAction("redirect/register");
 const redirectLogin = createAction("redirect/login");
 const redirectLogout = createAction("redirect/logout");
+const redirectEmailSend = createAction("redirect/email");
 
 export const registerUserAction = createAsyncThunk(
   "register/user",
@@ -190,8 +191,19 @@ export const subPricesAction = createAsyncThunk(
 export const sendEmailAction = createAsyncThunk(
   "send/email",
   async (payload, { rejectWithValue, getState, dispatch }) => {
+    const sendData = {
+      to: "sohammaha15@gmail.com",
+      subject:payload?.subject ,
+      message:payload?.message,
+      recipientEmail: payload?.recipientEmail
+    };
     try {
-      console.log("Working");
+      const data = await axios.post(`${baseURL}/api/email`, sendData, config);
+
+      dispatch(redirectEmailSend());
+
+      return data;
+
     } catch (error) {
       if (!error?.response) {
         throw error;
@@ -342,11 +354,15 @@ const userSlice = createSlice({
       state.appErr = action?.payload?.message;
     });
     //send email
+    builder.addCase(redirectEmailSend, (state, action) => {
+      state.redirectEmail = true;
+    });
     builder.addCase(sendEmailAction.pending, (state, action) => {
       state.loading = true;
     });
     builder.addCase(sendEmailAction.fulfilled, (state, action) => {
       state.loading = false;
+      state.redirectEmail = false;
       state.emailSend = action?.payload;
       state.serverError = undefined;
       state.appErr = undefined;
