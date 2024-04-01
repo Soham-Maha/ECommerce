@@ -193,9 +193,9 @@ export const sendEmailAction = createAsyncThunk(
   async (payload, { rejectWithValue, getState, dispatch }) => {
     const sendData = {
       to: "sohammaha15@gmail.com",
-      subject:payload?.subject ,
-      message:payload?.message,
-      recipientEmail: payload?.recipientEmail
+      subject: payload?.subject,
+      message: payload?.message,
+      recipientEmail: payload?.recipientEmail,
     };
     try {
       const data = await axios.post(`${baseURL}/api/email`, sendData, config);
@@ -203,7 +203,30 @@ export const sendEmailAction = createAsyncThunk(
       dispatch(redirectEmailSend());
 
       return data;
+    } catch (error) {
+      if (!error?.response) {
+        throw error;
+      }
+      return rejectWithValue(error?.response?.data);
+    }
+  }
+);
 
+//create subcription window hosted by stripe
+export const subSessionStripe = createAsyncThunk(
+  "stripe/session",
+  async (payload, { rejectWithValue, getState, dispatch }) => {
+    //formatted data
+    const sendData = {
+      priceId: payload?.priceId,
+    };
+    try {
+      const { data } = await axios.post(
+        `${baseURL}/api/users/createStripeSession`,
+        sendData,
+        config
+      );
+      return data;
     } catch (error) {
       if (!error?.response) {
         throw error;
@@ -368,6 +391,21 @@ const userSlice = createSlice({
       state.appErr = undefined;
     });
     builder.addCase(sendEmailAction.rejected, (state, action) => {
+      state.loading = false;
+      state.serverError = action?.payload?.message;
+      state.appErr = action?.payload?.message;
+    });
+    //create stripe session aka checkout window
+    builder.addCase(subSessionStripe.pending, (state, action) => {
+      state.loading = true;
+    });
+    builder.addCase(subSessionStripe.fulfilled, (state, action) => {
+      state.loading = false;
+      state.stripeSessionUrl = action?.payload;
+      state.serverError = undefined;
+      state.appErr = undefined;
+    });
+    builder.addCase(subSessionStripe.rejected, (state, action) => {
       state.loading = false;
       state.serverError = action?.payload?.message;
       state.appErr = action?.payload?.message;

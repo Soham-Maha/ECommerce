@@ -5,6 +5,7 @@ import {
   logoutAction,
   sendEmailAction,
   subPricesAction,
+  subSessionStripe,
   userDetailsAction,
 } from "../../redux/slices/users/usersSlices";
 import Cookies from "js-cookie";
@@ -16,7 +17,8 @@ const Homepage = () => {
 
   //get the store data
   const storeData = useSelector((state) => state?.users);
-  const { loading, appErr, serverErr, redirectLogout, user } = storeData;
+  const { loading, appErr, serverErr, redirectLogout, stripeSessionUrl, user } =
+    storeData;
 
   // if (redirectLogout) {
   //   navigate("/login");
@@ -28,6 +30,15 @@ const Homepage = () => {
     Cookies.remove("token");
     localStorage.clear();
     navigate("/login");
+  };
+
+  const stripeSessionId = {
+    priceId: "price_1OdRh6SIfAQuyMZwS7pCoaO",
+  };
+
+  if(stripeSessionUrl){
+    // window.location.href = stripeSessionUrl;
+    console.log(stripeSessionUrl)
   };
 
   return (
@@ -60,6 +71,12 @@ const Homepage = () => {
       <button
         onClick={() => dispatch(subPricesAction())}
         className="rounded py-2 mx-2 bg-emerald-300 px-4 font-poppins text-white"
+      >
+        Get stripe Prices
+      </button>
+      <button
+        onClick={() => dispatch(subSessionStripe(stripeSessionId))}
+        className="rounded py-2 mx-2 bg-blue-300 px-4 font-poppins text-white"
       >
         Get stripe Prices
       </button>
