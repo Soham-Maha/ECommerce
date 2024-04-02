@@ -37,8 +37,8 @@ const Homepage = () => {
   };
 
   if(stripeSessionUrl){
-    // window.location.href = stripeSessionUrl;
-    console.log(stripeSessionUrl)
+    window.location.href = stripeSessionUrl;
+    // console.log(stripeSessionUrl)
   };
 
   return (

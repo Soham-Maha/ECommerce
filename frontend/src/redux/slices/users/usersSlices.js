@@ -236,6 +236,25 @@ export const subSessionStripe = createAsyncThunk(
   }
 );
 
+//sub status update after success
+export const subStatusCtrl = createAsyncThunk(
+  "subStaus/update",
+  async (payload, { rejectWithValue, getState, dispatch }) => {
+    const user = getState()?.users?.userAuth
+    try {
+      const {data} = await axios.put(`${baseURL}/api/users/subStausUpdate`);
+
+      //update user datails on the local state
+      localStorage.setItem("userInfo",JSON.stringify(data?.user))
+    } catch (error) {
+      if (!error?.response) {
+        throw error;
+      }
+      return rejectWithValue(error?.response?.data);
+    }
+  }
+);
+
 //get user from local state and put him in the store
 let userAuth;
 
