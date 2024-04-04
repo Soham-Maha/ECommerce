@@ -2,10 +2,12 @@ import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import {
+  customerPortal,
   logoutAction,
   sendEmailAction,
   subPricesAction,
   subSessionStripe,
+  subStatusCtrl,
   userDetailsAction,
 } from "../../redux/slices/users/usersSlices";
 import Cookies from "js-cookie";
@@ -17,8 +19,15 @@ const Homepage = () => {
 
   //get the store data
   const storeData = useSelector((state) => state?.users);
-  const { loading, appErr, serverErr, redirectLogout, stripeSessionUrl, user } =
-    storeData;
+  const {
+    loading,
+    appErr,
+    serverErr,
+    redirectLogout,
+    stripeSessionUrl,
+    customerPortalUrl,
+    user,
+  } = storeData;
 
   // if (redirectLogout) {
   //   navigate("/login");
@@ -36,10 +45,14 @@ const Homepage = () => {
     priceId: "price_1OdRh6SIfAQuyMZwS7pCoaO",
   };
 
-  if(stripeSessionUrl){
+  if (stripeSessionUrl) {
     window.location.href = stripeSessionUrl;
     // console.log(stripeSessionUrl)
-  };
+  }
+  if (customerPortalUrl) {
+    window.location.href = customerPortalUrl;
+    // console.log(stripeSessionUrl)
+  }
 
   return (
     <div>
@@ -79,6 +92,18 @@ const Homepage = () => {
         className="rounded py-2 mx-2 bg-blue-300 px-4 font-poppins text-white"
       >
         Get stripe Prices
+      </button>
+      <button
+        onClick={() => dispatch(subStatusCtrl())}
+        className="rounded py-2 mx-2 bg-blue-500 px-4 font-poppins text-white"
+      >
+        Successful payment
+      </button>
+      <button
+        onClick={() => dispatch(customerPortal())}
+        className="rounded py-2 mx-2 bg-blue-500 px-4 font-poppins text-white"
+      >
+        customer portal access
       </button>
     </div>
   );

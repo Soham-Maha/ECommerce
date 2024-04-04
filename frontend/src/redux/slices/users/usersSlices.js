@@ -216,13 +216,14 @@ export const sendEmailAction = createAsyncThunk(
 export const subSessionStripe = createAsyncThunk(
   "stripe/session",
   async (payload, { rejectWithValue, getState, dispatch }) => {
-    //formatted data
+    //formated data
+    console.log(payload);
     const sendData = {
       priceId: payload?.priceId,
     };
     try {
       const { data } = await axios.post(
-        `${baseURL}/api/users/createStripeSession`,
+        `${baseURL}/api/users/createSessionStripe`,
         sendData,
         config
       );
@@ -240,12 +241,40 @@ export const subSessionStripe = createAsyncThunk(
 export const subStatusCtrl = createAsyncThunk(
   "subStaus/update",
   async (payload, { rejectWithValue, getState, dispatch }) => {
-    const user = getState()?.users?.userAuth
+    const user = getState()?.users?.userAuth;
     try {
-      const {data} = await axios.put(`${baseURL}/api/users/subStausUpdate`);
+      const { data } = await axios.put(
+        `${baseURL}/api/users/subStausUpdate`,
+        payload,
+        config
+      );
 
+      console.log(data);
       //update user datails on the local state
-      localStorage.setItem("userInfo",JSON.stringify(data?.user))
+      localStorage.setItem("userInfo", JSON.stringify(data?.updatedUser));
+
+      return data;
+    } catch (error) {
+      if (!error?.response) {
+        throw error;
+      }
+      return rejectWithValue(error?.response?.data);
+    }
+  }
+);
+
+//customer portal access
+export const customerPortal = createAsyncThunk(
+  "customer/portal",
+  async (payload, { rejectWithValue, getState, dispatch }) => {
+    try {
+      const { data } = await axios.get(
+        `${baseURL}/api/users/customerPortal`,
+        config
+      );
+
+
+      return data;
     } catch (error) {
       if (!error?.response) {
         throw error;
@@ -425,6 +454,36 @@ const userSlice = createSlice({
       state.appErr = undefined;
     });
     builder.addCase(subSessionStripe.rejected, (state, action) => {
+      state.loading = false;
+      state.serverError = action?.payload?.message;
+      state.appErr = action?.payload?.message;
+    });
+    //sub status update after successful payment
+    builder.addCase(subStatusCtrl.pending, (state, action) => {
+      state.loading = true;
+    });
+    builder.addCase(subStatusCtrl.fulfilled, (state, action) => {
+      state.loading = false;
+      state.user = action?.payload;
+      state.serverError = undefined;
+      state.appErr = undefined;
+    });
+    builder.addCase(subStatusCtrl.rejected, (state, action) => {
+      state.loading = false;
+      state.serverError = action?.payload?.message;
+      state.appErr = action?.payload?.message;
+    });
+    //customer portal creation
+    builder.addCase(customerPortal.pending, (state, action) => {
+      state.loading = true;
+    });
+    builder.addCase(customerPortal.fulfilled, (state, action) => {
+      state.loading = false;
+      state.customerPortalUrl = action?.payload;
+      state.serverError = undefined;
+      state.appErr = undefined;
+    });
+    builder.addCase(customerPortal.rejected, (state, action) => {
       state.loading = false;
       state.serverError = action?.payload?.message;
       state.appErr = action?.payload?.message;
