@@ -305,10 +305,85 @@ export const changePassword = createAsyncThunk(
   "change/password",
   async (payload, { rejectWithValue, getState, dispatch }) => {
     const sendData = {
-      password: payload
-    }
+      password: payload,
+    };
     try {
-      const {data} = await axios.put(`${baseURL}/api/users/updatePassword`, sendData, config);
+      const { data } = await axios.put(
+        `${baseURL}/api/users/updatePassword`,
+        sendData,
+        config
+      );
+      return data;
+    } catch (error) {
+      if (!error?.response) {
+        throw error;
+      }
+      return rejectWithValue(error?.response?.data);
+    }
+  }
+);
+
+//password reset url send to email
+export const passwordResetUrl = createAsyncThunk(
+  "password/resetUrl",
+  async (payload, { rejectWithValue, getState, dispatch }) => {
+    const sendData = {
+      email: payload?.email,
+    };
+    try {
+      const { data } = await axios.put(
+        `${baseURL}/api/users/passwordReset`,
+        sendData,
+        config
+      );
+      return data;
+    } catch (error) {
+      if (!error?.response) {
+        throw error;
+      }
+      return rejectWithValue(error?.response?.data);
+    }
+  }
+);
+
+//password reset after clicking the url
+export const passwordResetClick = createAsyncThunk(
+  "passwordReset/click",
+  async (payload, { rejectWithValue, getState, dispatch }) => {
+    const sendData = {
+      password: payload?.password,
+      token: payload?.token,
+    };
+    try {
+      const { data } = await axios.put(
+        `${baseURL}/api/users/passwordResetAfter`,
+        sendData,
+        config
+      );
+
+      return data;
+    } catch (error) {
+      if (!error?.response) {
+        throw error;
+      }
+      return rejectWithValue(error?.response?.data);
+    }
+  }
+);
+
+//verify user account - send verify email
+export const verifyAccountSend = createAsyncThunk(
+  "verify/send",
+  async (payload, { rejectWithValue, getState, dispatch }) => {
+    const sendData = {
+      email: "",
+    };
+    try {
+      const { data } = await axios.post(
+        `${baseURL}/api/users/verifyAccount`,
+        sendData,
+        config
+      );
       return data;
     } catch (error) {
       if (!error?.response) {
@@ -553,7 +628,51 @@ const userSlice = createSlice({
       state.serverErr = action?.payload?.message;
       state.appErr = action?.payload?.message;
     });
-    
+    //reset password url send to email
+    builder.addCase(passwordResetUrl.pending, (state, action) => {
+      state.loading = true;
+    });
+    builder.addCase(passwordResetUrl.fulfilled, (state, action) => {
+      state.loading = false;
+      state.passwordResetUrl = action?.payload;
+      state.serverErr = undefined;
+      state.appErr = undefined;
+    });
+    builder.addCase(passwordResetUrl.rejected, (state, action) => {
+      state.loading = false;
+      state.serverErr = action?.payload?.message;
+      state.appErr = action?.payload?.message;
+    });
+    //reset password after clicking the url
+    builder.addCase(passwordResetClick.pending, (state, action) => {
+      state.loading = true;
+    });
+    builder.addCase(passwordResetClick.fulfilled, (state, action) => {
+      state.loading = false;
+      state.passwordResetClick = action?.payload;
+      state.serverErr = undefined;
+      state.appErr = undefined;
+    });
+    builder.addCase(passwordResetClick.rejected, (state, action) => {
+      state.loading = false;
+      state.serverErr = action?.payload?.message;
+      state.appErr = action?.payload?.message;
+    });
+    //send verification url
+    builder.addCase(verifyAccountSend.pending, (state, action) => {
+      state.loading = true;
+    });
+    builder.addCase(verifyAccountSend.fulfilled, (state, action) => {
+      state.loading = false;
+      state.verificationUrl = action?.payload;
+      state.serverErr = undefined;
+      state.appErr = undefined;
+    });
+    builder.addCase(verifyAccountSend.rejected, (state, action) => {
+      state.loading = false;
+      state.serverErr = action?.payload?.message;
+      state.appErr = action?.payload?.message;
+    });
   },
 });
 
