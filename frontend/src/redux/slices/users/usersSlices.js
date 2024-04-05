@@ -273,7 +273,42 @@ export const customerPortal = createAsyncThunk(
         config
       );
 
+      return data;
+    } catch (error) {
+      if (!error?.response) {
+        throw error;
+      }
+      return rejectWithValue(error?.response?.data);
+    }
+  }
+);
 
+//get all users
+export const getAllUsers = createAsyncThunk(
+  "getAll/users",
+  async (payload, { rejectWithValue, getState, dispatch }) => {
+    try {
+      const { data } = await axios.get(`${baseURL}/api/users/allUsers`, config);
+
+      return data;
+    } catch (error) {
+      if (!error?.response) {
+        throw error;
+      }
+      return rejectWithValue(error?.response?.data);
+    }
+  }
+);
+
+//change user password
+export const changePassword = createAsyncThunk(
+  "change/password",
+  async (payload, { rejectWithValue, getState, dispatch }) => {
+    const sendData = {
+      password: payload
+    }
+    try {
+      const {data} = await axios.put(`${baseURL}/api/users/updatePassword`, sendData, config);
       return data;
     } catch (error) {
       if (!error?.response) {
@@ -488,6 +523,37 @@ const userSlice = createSlice({
       state.serverError = action?.payload?.message;
       state.appErr = action?.payload?.message;
     });
+    //get all users
+    builder.addCase(getAllUsers.pending, (state, action) => {
+      state.loading = true;
+    });
+    builder.addCase(getAllUsers.fulfilled, (state, action) => {
+      state.loading = false;
+      state.allUsers = action?.payload?.user;
+      state.serverErr = undefined;
+      state.appErr = undefined;
+    });
+    builder.addCase(getAllUsers.rejected, (state, action) => {
+      state.loading = false;
+      state.serverErr = action?.payload?.message;
+      state.appErr = action?.payload?.message;
+    });
+    //update password
+    builder.addCase(changePassword.pending, (state, action) => {
+      state.loading = true;
+    });
+    builder.addCase(changePassword.fulfilled, (state, action) => {
+      state.loading = false;
+      state.user = action?.payload?.updatedUser;
+      state.serverErr = undefined;
+      state.appErr = undefined;
+    });
+    builder.addCase(changePassword.rejected, (state, action) => {
+      state.loading = false;
+      state.serverErr = action?.payload?.message;
+      state.appErr = action?.payload?.message;
+    });
+    
   },
 });
 

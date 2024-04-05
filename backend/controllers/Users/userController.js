@@ -175,7 +175,9 @@ const userPasswordUpdate = asyncHandler(async (req, res) => {
 
       user.password = encryptedPassword;
 
-      const updatedUser = await user.save();
+      const updatedUser1 = await user.save();
+
+      const updateUser = await User.findById(id).select("-password");
 
       res.status(201).json({
         updatedUser,
