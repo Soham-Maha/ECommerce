@@ -336,7 +336,7 @@ const updateUserfield = asyncHandler(async (req, res) => {
 
     if (!user) throw new Error("No user found");
 
-    const updatedUser = await User.findById(id).populate('saved');
+    const updatedUser = await User.findById(id).populate('saved').select("-password");
 
     res.status(200).json(updatedUser);
   } catch (error) {

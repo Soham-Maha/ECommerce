@@ -394,6 +394,104 @@ export const verifyAccountSend = createAsyncThunk(
   }
 );
 
+//verify account url after click
+export const verifyAccountClick = createAsyncThunk(
+  "verify/click",
+  async (payload, { rejectWithValue, getState, dispatch }) => {
+    const sendData = {
+      token: payload,
+    };
+    try {
+      const { data } = await axios.put(
+        `${baseURL}/api/users/verifyAccountAfter`,
+        sendData,
+        config
+      );
+
+      //store new verified user to the local storage
+      localStorage.setItem("userInfo", JSON.stringify(data));
+
+      return data;
+    } catch (error) {
+      if (!error?.response) {
+        throw error;
+      }
+      return rejectWithValue(error?.response?.data);
+    }
+  }
+);
+
+//update a user field
+export const updatedUserField = createAsyncThunk(
+  "updateUser/field",
+  async (payload, { rejectWithValue, getState, dispatch }) => {
+    const sendData = {
+      firstName: payload,
+    };
+    try {
+      const { data } = await axios.put(
+        `${baseURL}/api/users/updateUser`,
+        sendData,
+        config
+      );
+      //store new verified user to the local storage
+      localStorage.setItem("userInfo", JSON.stringify(data));
+      return data;
+    } catch (error) {
+      if (!error?.response) {
+        throw error;
+      }
+      return rejectWithValue(error?.response?.data);
+    }
+  }
+);
+
+//update sub after cancel
+export const subAfterCancel = createAsyncThunk(
+  "subUpdate/cancel",
+  async (payload, { rejectWithValue, getState, dispatch }) => {
+    const sendData = {};
+    try {
+      const { data } = await axios.put(
+        `${baseURL}/api/users/subStausUpdateAfterCancel`,
+        sendData,
+        config
+      );
+      //store new verified user to the local storage
+      localStorage.setItem("userInfo", JSON.stringify(data));
+      return data;
+    } catch (error) {
+      if (!error?.response) {
+        throw error;
+      }
+      return rejectWithValue(error?.response?.data);
+    }
+  }
+);
+
+//sub update after renew
+export const subAfterRenew = createAsyncThunk(
+  "subAfter/renew",
+  async (payload, { rejectWithValue, getState, dispatch }) => {
+    const sendData = {};
+    try {
+      const { data } = await axios.post(
+        `${baseURL}/api/users/subStatusUpdateAfterRenew`,
+        sendData,
+        config
+      );
+      //store new verified user to the local storage
+      localStorage.setItem("userInfo", JSON.stringify(data));
+      return data;
+    } catch (error) {
+      if (!error?.response) {
+        throw error;
+      }
+      return rejectWithValue(error?.response?.data);
+    }
+  }
+);
+
 //get user from local state and put him in the store
 let userAuth;
 
@@ -669,6 +767,68 @@ const userSlice = createSlice({
       state.appErr = undefined;
     });
     builder.addCase(verifyAccountSend.rejected, (state, action) => {
+      state.loading = false;
+      state.serverErr = action?.payload?.message;
+      state.appErr = action?.payload?.message;
+    });
+    //verify after clicking the link
+    builder.addCase(verifyAccountClick.pending, (state, action) => {
+      state.loading = true;
+    });
+    builder.addCase(verifyAccountClick.fulfilled, (state, action) => {
+      state.loading = false;
+      state.verifyAccountClick = action?.payload;
+      state.user = action?.payload;
+      state.serverErr = undefined;
+      state.appErr = undefined;
+    });
+    builder.addCase(verifyAccountClick.rejected, (state, action) => {
+      state.loading = false;
+      state.serverErr = action?.payload?.message;
+      state.appErr = action?.payload?.message;
+    });
+    //update user field
+    builder.addCase(updatedUserField.pending, (state, action) => {
+      state.loading = true;
+    });
+    builder.addCase(updatedUserField.fulfilled, (state, action) => {
+      state.loading = false;
+      state.updatedUserField = action?.payload;
+      state.user = action?.payload;
+      state.serverErr = undefined;
+      state.appErr = undefined;
+    });
+    builder.addCase(updatedUserField.rejected, (state, action) => {
+      state.loading = false;
+      state.serverErr = action?.payload?.message;
+      state.appErr = action?.payload?.message;
+    });
+    //sub status update after cancel
+    builder.addCase(subAfterCancel.pending, (state, action) => {
+      state.loading = true;
+    });
+    builder.addCase(subAfterCancel.fulfilled, (state, action) => {
+      state.loading = false;
+      state.user = action?.payload;
+      state.serverErr = undefined;
+      state.appErr = undefined;
+    });
+    builder.addCase(subAfterCancel.rejected, (state, action) => {
+      state.loading = false;
+      state.serverErr = action?.payload?.message;
+      state.appErr = action?.payload?.message;
+    });
+    //update sub renew
+    builder.addCase(subAfterRenew.pending, (state, action) => {
+      state.loading = true;
+    });
+    builder.addCase(subAfterRenew.fulfilled, (state, action) => {
+      state.loading = false;
+      state.user = action?.payload;
+      state.serverErr = undefined;
+      state.appErr = undefined;
+    });
+    builder.addCase(subAfterRenew.rejected, (state, action) => {
       state.loading = false;
       state.serverErr = action?.payload?.message;
       state.appErr = action?.payload?.message;
