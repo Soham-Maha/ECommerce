@@ -62,7 +62,7 @@ const registerUser = asyncHandler(async (req, res) => {
 const userLogin = asyncHandler(async (req, res) => {
   const { email, password } = req?.body;
   try {
-    const emailExists = await User.findOne({ email: email }).populate('saved');
+    const emailExists = await User.findOne({ email: email }).populate("saved");
 
     if (!emailExists) {
       throw new Error("User does not exist! Please Register!");
@@ -109,7 +109,7 @@ const userLogin = asyncHandler(async (req, res) => {
 const userDetails = asyncHandler(async (req, res) => {
   const id = req?.user?._id;
   try {
-    const user = await User.findById(id).select("-password").populate('saved');
+    const user = await User.findById(id).select("-password").populate("saved");
     res.status(200).json({
       success: true,
       user,
@@ -336,7 +336,9 @@ const updateUserfield = asyncHandler(async (req, res) => {
 
     if (!user) throw new Error("No user found");
 
-    const updatedUser = await User.findById(id).populate('saved').select("-password");
+    const updatedUser = await User.findById(id)
+      .populate("saved")
+      .select("-password");
 
     res.status(200).json(updatedUser);
   } catch (error) {
@@ -465,7 +467,7 @@ const subStatusUpdate = asyncHandler(async (req, res) => {
       { new: true }
     );
 
-    const updatedUser = await User.findById(id).populate('saved');
+    const updatedUser = await User.findById(id).populate("saved");
 
     res.status(200).json(updatedUser);
   } catch (error) {
@@ -558,19 +560,36 @@ const updateSubAfterCancel = asyncHandler(async (req, res) => {
 });
 
 //check if user renews plan
-const renewSub = asyncHandler(async(req,res)=>{
+const renewSub = asyncHandler(async (req, res) => {
   const id = req?.user?._id;
   const targetUser = await User.findById(id);
 
   const customerId = await targetUser?.stripe_customer_id;
   try {
-    if(targetUser.subscriptions[0].cancel_at_period_end === false && targetUser.isSubCanceled === "ActiveTillEnd"){
+    const subStaus = await stripe.subcriptions.list({
+      customer: customerId,
+      status: "all",
+      expand: ["data.default_payment_method"],
+    });
+
+    const updateSubStatus = await User.findByIdAndUpdate(
+      id,
+      {
+        subscriptions: subStaus.data,
+        role: "subscriber",
+      },
+      { new: true }
+    );
+    if (
+      updateSubStatus.subscriptions[0].cancel_at_period_end === false &&
+      updateSubStatus.isSubCanceled === "ActiveTillEnd"
+    ) {
       const subStaus = await stripe.subcriptions.list({
         customer: customerId,
         status: "all",
         expand: ["data.default_payment_method"],
       });
-  
+
       const updateSubStatus = await User.findByIdAndUpdate(
         id,
         {
@@ -580,22 +599,20 @@ const renewSub = asyncHandler(async(req,res)=>{
         },
         { new: true }
       );
-  
+
       const updatedUser = await User.findById(id);
-  
+
       res.status(200).json(updatedUser);
-    }else{
+    } else {
       res.status(200).json(targetUser);
     }
-    
-    
   } catch (error) {
     res.status(401).json({
       success: false,
       message: error.message,
     });
   }
-})
+});
 
 module.exports = {
   registerUser,
