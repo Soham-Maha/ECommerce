@@ -71,6 +71,53 @@ export const createProduct = createAsyncThunk(
   }
 );
 
+//fetch all data
+export const fetchAllProducts = createAsyncThunk(
+  "fetchAll/products",
+  async (payload, { rejectWithValue, getState, dispatch }) => {
+    try {
+      const { data } = await axios.get(
+        `${baseURL}/api/products/fetchAllProducts`,
+        config
+      );
+      return data;
+    } catch (error) {
+      if (!error?.response) {
+        throw error;
+      }
+      return rejectWithValue(error?.response?.data);
+    }
+  }
+);
+
+//fetch all free products
+export const fetchFreeProd = createAsyncThunk("fetchFree/products",async(payload,{rejectWithValue,getState,dispatch})=>{
+  try {
+    const {data} = await axios.get(`${baseURL}/api/products/fetchFreeProducts`,config);
+    return data;
+  } catch (error) {
+    if (!error?.response) {
+      throw error;
+    }
+    return rejectWithValue(error?.response?.data);
+    
+  }
+});
+
+//fetch all paid products
+export const fetchPaidProd = createAsyncThunk("fetchPaid/products",async(payload,{rejectWithValue,getState,dispatch})=>{
+  try {
+    const {data} = await axios.get(`${baseURL}/api/products/fetchPaidProducts`,config);
+    return data;
+  } catch (error) {
+    if (!error?.response) {
+      throw error;
+    }
+    return rejectWithValue(error?.response?.data);
+    
+  }
+});
+
 //initialize slice
 const productSlice = createSlice({
   name: "products",
@@ -91,6 +138,51 @@ const productSlice = createSlice({
       state.appErr = undefined;
     });
     builder.addCase(createProduct.rejected, (state, action) => {
+      state.appErr = action?.payload?.message;
+      state.serverErr = action?.payload?.message;
+      state.loading = false;
+    });
+    //fetch all products
+    builder.addCase(fetchAllProducts.pending, (state, action) => {
+      state.loading = true;
+    });
+    builder.addCase(fetchAllProducts.fulfilled, (state, action) => {
+      state.loading = false;
+      state.allProductsGot = action?.payload;
+      state.serverErr = undefined;
+      state.appErr = undefined;
+    });
+    builder.addCase(fetchAllProducts.rejected, (state, action) => {
+      state.appErr = action?.payload?.message;
+      state.serverErr = action?.payload?.message;
+      state.loading = false;
+    });
+    //fetch free products
+    builder.addCase(fetchFreeProd.pending, (state, action) => {
+      state.loading = true;
+    });
+    builder.addCase(fetchFreeProd.fulfilled, (state, action) => {
+      state.loading = false;
+      state.allFreeProductsGot = action?.payload;
+      state.serverErr = undefined;
+      state.appErr = undefined;
+    });
+    builder.addCase(fetchFreeProd.rejected, (state, action) => {
+      state.appErr = action?.payload?.message;
+      state.serverErr = action?.payload?.message;
+      state.loading = false;
+    });
+     //fetch paid products
+     builder.addCase(fetchPaidProd.pending, (state, action) => {
+      state.loading = true;
+    });
+    builder.addCase(fetchPaidProd.fulfilled, (state, action) => {
+      state.loading = false;
+      state.allPaidProductsGot = action?.payload;
+      state.serverErr = undefined;
+      state.appErr = undefined;
+    });
+    builder.addCase(fetchPaidProd.rejected, (state, action) => {
       state.appErr = action?.payload?.message;
       state.serverErr = action?.payload?.message;
       state.loading = false;
