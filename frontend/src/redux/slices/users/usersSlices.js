@@ -8,6 +8,7 @@ const redirectLogin = createAction("redirect/login");
 const redirectLogout = createAction("redirect/logout");
 const redirectEmailSend = createAction("redirect/email");
 
+//register a user
 export const registerUserAction = createAsyncThunk(
   "register/user",
   async (user, { rejectWithValue, getState, dispatch }) => {
