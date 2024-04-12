@@ -1,15 +1,6 @@
 import React from "react";
-import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
-import {
-  customerPortal,
-  logoutAction,
-  sendEmailAction,
-  subPricesAction,
-  subSessionStripe,
-  subStatusCtrl,
-  userDetailsAction,
-} from "../../redux/slices/users/usersSlices";
+import { useDispatch, useSelector } from "react-redux";
 import Cookies from "js-cookie";
 
 const Homepage = () => {
@@ -19,92 +10,11 @@ const Homepage = () => {
 
   //get the store data
   const storeData = useSelector((state) => state?.users);
-  const {
-    loading,
-    appErr,
-    serverErr,
-    redirectLogout,
-    stripeSessionUrl,
-    customerPortalUrl,
-    user,
-  } = storeData;
-
-  // if (redirectLogout) {
-  //   navigate("/login");
-  // }
-
-  //logout function
-  const logoutNavigate = () => {
-    dispatch(logoutAction());
-    Cookies.remove("token");
-    localStorage.clear();
-    navigate("/login");
-  };
-
-  const stripeSessionId = {
-    priceId: "price_1OdRh6SIfAQuyMZwS7pCoaO",
-  };
-
-  if (stripeSessionUrl) {
-    window.location.href = stripeSessionUrl;
-    // console.log(stripeSessionUrl)
-  }
-  if (customerPortalUrl) {
-    window.location.href = customerPortalUrl;
-    // console.log(stripeSessionUrl)
-  }
+  const { loading, appErr, serverErr, user } = storeData;
 
   return (
     <div>
-      <h1 className="text-2xl text-yellow-500 font font-poppins">Homepage</h1>
-      {user ? (
-        <>
-          {" "}
-          <button
-            onClick={() => logoutNavigate()}
-            className="rounded py-2 bg-red-500 px-4 font-poppins text-white"
-          >
-            logout
-          </button>
-        </>
-      ) : (
-        <Link
-          to={"/login"}
-          className="rounded py-2 bg-blue-500 px-4 font-poppins text-white"
-        >
-          Login
-        </Link>
-      )}
-      <button
-        onClick={() => dispatch(userDetailsAction())}
-        className="rounded py-2 mx-2 bg-emerald-500 px-4 font-poppins text-white"
-      >
-        Get details
-      </button>
-      <button
-        onClick={() => dispatch(subPricesAction())}
-        className="rounded py-2 mx-2 bg-emerald-300 px-4 font-poppins text-white"
-      >
-        Get stripe Prices
-      </button>
-      <button
-        onClick={() => dispatch(subSessionStripe(stripeSessionId))}
-        className="rounded py-2 mx-2 bg-blue-300 px-4 font-poppins text-white"
-      >
-        Get stripe Prices
-      </button>
-      <button
-        onClick={() => dispatch(subStatusCtrl())}
-        className="rounded py-2 mx-2 bg-blue-500 px-4 font-poppins text-white"
-      >
-        Successful payment
-      </button>
-      <button
-        onClick={() => dispatch(customerPortal())}
-        className="rounded py-2 mx-2 bg-blue-500 px-4 font-poppins text-white"
-      >
-        customer portal access
-      </button>
+      <h1>Homepage</h1>
     </div>
   );
 };
