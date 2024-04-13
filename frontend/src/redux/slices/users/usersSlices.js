@@ -543,7 +543,8 @@ const userSlice = createSlice({
     });
     builder.addCase(loginUserAction.fulfilled, (state, action) => {
       state.loading = false;
-      state.redirectLogin = false;
+      state.loginRedirect = false;
+      state.loggedInUser = action?.payload?.user;
       state.user = action?.payload?.user;
       state.serverError = undefined;
       state.appErr = undefined;
