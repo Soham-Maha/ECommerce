@@ -6,6 +6,10 @@ import ReactPlayer from "react-player";
 import i1 from "../../images/Hero/1.jpg";
 import WhatWeeOffer from "../WhatWeeOffer/WhatWeeOffer";
 import Stats from "../Stats/Stats";
+import Pricing from "../Pricing/Pricing";
+import Guarantee from "../Guarantee/Guarantee";
+import Faq from '../Faq/Faq'
+import Reviews from "../Reviews/Reviews";
 
 const Homepage = () => {
   const [cookies, setCookies] = useCookies();
@@ -139,14 +143,12 @@ const Homepage = () => {
       {/* components below */}
       <WhatWeeOffer/>
       <Stats />
-
-
-      {/* 
-      
       <Pricing />
       <Guarantee User={user} />
       <Faq />
-      <Reviews /> */}
+      <Reviews />
+
+
     </div>
   );
 };
