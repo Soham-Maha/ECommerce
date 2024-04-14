@@ -4,6 +4,8 @@ import { Cookies, useCookies } from "react-cookie";
 import { useDispatch, useSelector } from "react-redux";
 import ReactPlayer from "react-player";
 import i1 from "../../images/Hero/1.jpg";
+import WhatWeeOffer from "../WhatWeeOffer/WhatWeeOffer";
+import Stats from "../Stats/Stats";
 
 const Homepage = () => {
   const [cookies, setCookies] = useCookies();
@@ -16,10 +18,16 @@ const Homepage = () => {
   const storeData = useSelector((state) => state?.users);
   const { user, loggedInUser } = storeData;
 
-  if(loggedInUser && count===0){
-    setCookies("token", loggedInUser?.token)
+  // if (loggedInUser && count === 0) {
+  //   setCookies("token", loggedInUser?.token);
+  //   count++;
+  //   navigate(0);
+  // }
 
-  }
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0 });
+  }, []);
+
   return (
     <div className="max-w-screen overflow-hidden font-poppins bg-slate-50">
       <section class="sm:mt-6 lg:mt-8 mt-12 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -129,9 +137,12 @@ const Homepage = () => {
       {/* video hero section end */}
 
       {/* components below */}
-
-      {/* <WhatWeeOffer />
+      <WhatWeeOffer/>
       <Stats />
+
+
+      {/* 
+      
       <Pricing />
       <Guarantee User={user} />
       <Faq />
