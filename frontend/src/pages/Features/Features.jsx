@@ -2,25 +2,23 @@ import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import Reviews from "../../components/Reviews/Reviews";
-import off1 from '../../images/whatWeeOffer/off1.png';
-import off2 from '../../images/whatWeeOffer/off2.png';
-import off3 from '../../images/whatWeeOffer/off3.png';
-import off4 from '../../images/whatWeeOffer/off4.png';
-import off5 from '../../images/whatWeeOffer/off5.png';
-import off6 from '../../images/whatWeeOffer/off6.png';
-import f1 from '../../images/featuresbottom/1.svg'
-import f2 from '../../images/featuresbottom/2.svg'
-import f3 from '../../images/featuresbottom/3.svg'
-import f4 from '../../images/featuresbottom/4.svg'
-import f5 from '../../images/featuresbottom/5.svg'
-import f6 from '../../images/featuresbottom/6.svg'
-
+import off1 from "../../images/whatWeeOffer/off1.png";
+import off2 from "../../images/whatWeeOffer/off2.png";
+import off3 from "../../images/whatWeeOffer/off3.png";
+import off4 from "../../images/whatWeeOffer/off4.png";
+import off5 from "../../images/whatWeeOffer/off5.png";
+import off6 from "../../images/whatWeeOffer/off6.png";
+import f1 from "../../images/featuresbottom/1.svg";
+import f2 from "../../images/featuresbottom/2.svg";
+import f3 from "../../images/featuresbottom/3.svg";
+import f4 from "../../images/featuresbottom/4.svg";
+import f5 from "../../images/featuresbottom/5.svg";
+import f6 from "../../images/featuresbottom/6.svg";
 
 const Features = () => {
+  //get user from store
+  const { user } = useSelector((state) => state?.users);
 
-  //get user from store 
-  const {user} = useSelector((state)=>state?.users);
-  
   return (
     <div>
       <section class="bg-gray-800 text-white">
@@ -154,8 +152,7 @@ const Features = () => {
           </div>
 
           <div class="mt-12 text-center">
-            {!user
-            ? (
+            {!user ? (
               <Link
                 to={"/register"}
                 class="inline-block rounded bg-blue-600 px-12 py-3 text-sm font-medium text-white transition hover:bg-blue-700 focus:outline-none focus:ring focus:ring-yellow-400"
@@ -188,8 +185,7 @@ const Features = () => {
                 you purchase. Here are the most important features and perks you
                 will have access too.
               </p>
-              {!user
-              ? (
+              {!user ? (
                 <Link
                   to={"/register"}
                   class="mt-8 inline-block rounded bg-indigo-600 px-12 py-3 text-sm font-medium text-white transition hover:bg-indigo-700 focus:outline-none focus:ring focus:ring-yellow-400"

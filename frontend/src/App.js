@@ -8,6 +8,7 @@ import Navbar from "./components/Navbar/Navbar";
 import Footer from "./components/Footer/Footer";
 import About from "./pages/About/About";
 import Pricing from "./pages/Pricing/Pricing";
+import Features from "./pages/Features/Features";
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/about" element={<About />} />
           <Route path="/pricing" element={<Pricing />} />
+          <Route path="/features" element={<Features />} />
         </Routes>
         <Footer/>
       </CookiesProvider>
