@@ -1,41 +1,41 @@
 import React from "react";
 import { useFormik } from "formik";
 import { useDispatch, useSelector } from "react-redux";
-import * as Yup from 'yup';
+import * as Yup from "yup";
 import { useNavigate } from "react-router-dom";
-import {sendEmail} from '../../redux/slices/users/usersSlices.js';
+import { sendEmail } from "../../redux/slices/users/usersSlices.js";
 
 //schema
 const formSchema = Yup.object({
   recipientEmail: Yup.string().required("Recipient Email is required"),
   subject: Yup.string().required("Subject is required"),
   message: Yup.string().required("Message is required"),
-})
+});
 
 const Contact = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const {redirectEmail} = useSelector((state)=>state?.users);
+  const { redirectEmail } = useSelector((state) => state?.users);
 
   //formik
   const formik = useFormik({
-    initialValues:{
-      recipientEmail:"",
-      subject:"",
-      message:"",
-    },onSubmit: (values)=>{
-      dispatch(sendEmail(values))
+    initialValues: {
+      recipientEmail: "",
+      subject: "",
+      message: "",
     },
-    validationSchema:formSchema
+    onSubmit: (values) => {
+      dispatch(sendEmail(values));
+    },
+    validationSchema: formSchema,
   });
 
-  if(redirectEmail){
+  if (redirectEmail) {
     navigate("/");
     navigate(0);
   }
-  
-  
+
   return (
     <div className="w-full overflow-hidden font-poppins ">
       <section className="py-6 dark:bg-gray-800 dark:text-gray-50 h-screen pt-96">
