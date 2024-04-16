@@ -10,6 +10,7 @@ import About from "./pages/About/About";
 import Pricing from "./pages/Pricing/Pricing";
 import Features from "./pages/Features/Features";
 import Contact from "./pages/Contact/Contact";
+import ProductsFree from "./pages/FreeProducts/ProductsFree";
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
           <Route path="/pricing" element={<Pricing />} />
           <Route path="/features" element={<Features />} />
           <Route path="/contact" element={<Contact />} />
+          <Route path="/productsFree" element={<ProductsFree />} />
         </Routes>
         <Footer/>
       </CookiesProvider>
