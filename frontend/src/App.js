@@ -9,6 +9,7 @@ import Footer from "./components/Footer/Footer";
 import About from "./pages/About/About";
 import Pricing from "./pages/Pricing/Pricing";
 import Features from "./pages/Features/Features";
+import Contact from "./pages/Contact/Contact";
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
           <Route path="/about" element={<About />} />
           <Route path="/pricing" element={<Pricing />} />
           <Route path="/features" element={<Features />} />
+          <Route path="/contact" element={<Contact />} />
         </Routes>
         <Footer/>
       </CookiesProvider>
