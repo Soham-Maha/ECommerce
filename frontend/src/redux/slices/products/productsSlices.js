@@ -436,7 +436,7 @@ const productSlice = createSlice({
     });
     builder.addCase(singleProdFree.fulfilled, (state, action) => {
       state.loading = false;
-      state.singleProductFree = action?.payload;
+      state.singleProductFree = action?.payload[0];
       state.serverErr = undefined;
       state.appErr = undefined;
     });

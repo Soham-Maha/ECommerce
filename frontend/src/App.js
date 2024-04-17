@@ -11,6 +11,7 @@ import Pricing from "./pages/Pricing/Pricing";
 import Features from "./pages/Features/Features";
 import Contact from "./pages/Contact/Contact";
 import ProductsFree from "./pages/FreeProducts/ProductsFree";
+import ProductDetailsFree from "./pages/FreeProdDetails/ProductDetailsFree";
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
           <Route path="/features" element={<Features />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/productsFree" element={<ProductsFree />} />
+          <Route path="/productFree/:id" element={<ProductDetailsFree />} />
         </Routes>
         <Footer/>
       </CookiesProvider>

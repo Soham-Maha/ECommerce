@@ -32,7 +32,7 @@ route.get("/fetchPaidProducts", userAuth, fetchPaidProd);
 route.get("/fetchGoogleProducts", userAuth, fetchGoogleProd);
 route.get("/fetchFacebookProducts", userAuth, fetchFacebookProd);
 route.get("/fetchSIngleProduct/:id", userAuth, fetchSingleProd);
-route.get("/fetchSIngleProductFree/:id", userAuth, fetchSingleProdFree);
+route.get("/fetchSIngleProductFree/:id", fetchSingleProdFree);
 route.put("/updateProduct/:id", userAuth, updateProduct);
 route.delete("/deleteProduct/:id", userAuth, deleteProductSingle);
 route.delete("/deleteAllProducts", userAuth, deleteAllProducts);
