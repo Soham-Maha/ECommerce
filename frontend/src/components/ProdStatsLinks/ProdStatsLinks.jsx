@@ -92,7 +92,7 @@ const ProdStatsLinks = ({ singleProdGot }) => {
           <h2 className="text-lg font-medium mb-4">Product Popularity:</h2>
           <p className="text-2xl font-semibold text-indigo-600">
             The Product is:{" "}
-            <span id="popularityValue">{singleProdGot?.popularity}</span>
+            <span id="popularityValue">{singleProdGot?.popullarity}</span>
           </p>
         </div>
       </div>

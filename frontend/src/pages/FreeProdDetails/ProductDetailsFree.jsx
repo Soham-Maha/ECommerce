@@ -269,7 +269,7 @@ const ProductDetailsFree = () => {
       {/* prod descriptiosn*/}
       <ProdDescriptions singleProd={singleProdGotFree} />
       {/* prod desc end */}
-      <ProdStatsLinks singleProdGotFree={singleProdGotFree} />
+      <ProdStatsLinks singleProdGot={singleProdGotFree} />
     </div>
   );
 };

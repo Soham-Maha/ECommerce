@@ -1,45 +1,46 @@
-import React, { useEffect, useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { fetchFreeProd } from "../../redux/slices/products/productsSlices.js";
+import React,{useEffect, useState} from "react";
+import {Link, useNavigate} from 'react-router-dom'
+import {useDispatch, useSelector} from 'react-redux'
+import {fetchFreeProd} from '../../redux/slices/products/productsSlices.js'
 import DateFormatter from "../../utils/dateFormate.js";
 
 const ProductsFree = () => {
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
 
-  const { user } = useSelector((state) => state?.users);
-  const { allFreeProductsGot } = useSelector((state) => state?.products);
-
+  const {user} = useSelector((state)=> state?.users)
+  const {aLLFreeProductsGot} = useSelector((state)=>state?.products)
+  useEffect(() => {
+    dispatch(fetchFreeProd());
+  }, [dispatch]);
   //pagnation variables
   const [currentPage, setCurrentPage] = useState(1);
   const recordsPerPage = 6;
   const lastIndex = currentPage * recordsPerPage;
   const firstIndex = lastIndex - recordsPerPage;
+  console.log(aLLFreeProductsGot);
 
-  const npage = Math.ceil(allFreeProductsGot?.slice(firstIndex, lastIndex));
-  const records = allFreeProductsGot?.slice(firstIndex, lastIndex);
-  const numbers = Array.from({ length: npage }, (_, index) => index + 1);
+  const npage = Math.ceil(aLLFreeProductsGot?.slice(firstIndex, lastIndex));
+  const records = aLLFreeProductsGot?.slice(firstIndex, lastIndex);
+  const numbers = Array.from({length: npage}, (_, index)=> index + 1);
 
-  useEffect(() => {
-    dispatch(fetchFreeProd());
-  }, [dispatch]);
 
-  const prePage = () => {
-    if (currentPage !== firstIndex) {
+
+  const prePage = ()=> {
+    if(currentPage !== firstIndex) {
       setCurrentPage(currentPage - 1);
     }
   };
 
   const changeCPage = (id) => {
-    setCurrentPage(id);
-  };
+    setCurrentPage(id)
+  }
 
-  const nextPage = () => {
-    if (currentPage !== lastIndex) {
-      setCurrentPage(changeCPage + 1);
+  const nextPage = ()=> {
+    if(currentPage !== lastIndex) {
+      setCurrentPage(changeCPage + 1)
     }
-  };
+  }
 
   return (
     <div>
@@ -57,10 +58,11 @@ const ProductsFree = () => {
               </div>
             </div>
           </div>
-          <div></div>
+          <div>
+          </div>
           <div class="-mx-4 flex flex-wrap">
             {/* {map the records */}
-            {records?.map((singleProd) => {
+            {records?.map((singleProd)=> {
               return (
                 <>
                   <div class="w-full px-4 md:w-1/2 lg:w-1/3 flex justify-between">
@@ -149,7 +151,7 @@ const ProductsFree = () => {
               </Link>
             </li>
             {/* {map the numbers */}
-            {numbers.map((n, i) => (
+            {numbers.map((n, i)=> (
               <li
                 className={`text-3xl mx-2 ${
                   currentPage === n ? "text-blue-500" : "text-gray-700"

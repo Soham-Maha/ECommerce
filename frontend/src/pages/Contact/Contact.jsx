@@ -3,7 +3,7 @@ import { useFormik } from "formik";
 import { useDispatch, useSelector } from "react-redux";
 import * as Yup from "yup";
 import { useNavigate } from "react-router-dom";
-import { sendEmail } from "../../redux/slices/users/usersSlices.js";
+import { sendEmailAction } from "../../redux/slices/users/usersSlices.js";
 
 //schema
 const formSchema = Yup.object({
@@ -26,7 +26,7 @@ const Contact = () => {
       message: "",
     },
     onSubmit: (values) => {
-      dispatch(sendEmail(values));
+      dispatch(sendEmailAction(values));
     },
     validationSchema: formSchema,
   });

@@ -12,6 +12,7 @@ import Features from "./pages/Features/Features";
 import Contact from "./pages/Contact/Contact";
 import ProductsFree from "./pages/FreeProducts/ProductsFree";
 import ProductDetailsFree from "./pages/FreeProdDetails/ProductDetailsFree";
+import CreateProduct from "./pages/CreateProduct/CreateProduct";
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
           <Route path="/contact" element={<Contact />} />
           <Route path="/productsFree" element={<ProductsFree />} />
           <Route path="/productFree/:id" element={<ProductDetailsFree />} />
+          <Route path="/createProduct" element={<CreateProduct />} />
         </Routes>
         <Footer/>
       </CookiesProvider>

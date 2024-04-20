@@ -13,7 +13,7 @@ const ProdDescriptions = ({ singleProd }) => {
   const [coped8, setCoped8] = useState(false);
 
   const handleClick= () =>{
-    navigator.clipboard.writeText(singleProd?.description1);
+    navigator.clipboard.writeText(singleProd?.description);
     setCoped(true);
     setTimeout(()=>{
       setCoped(false)
@@ -83,7 +83,7 @@ const ProdDescriptions = ({ singleProd }) => {
           {" "}
           <div class="flex items-center justify-between text-gray-800 border border-gray-800 bg-white  text-sm py-3 px-4 sm:w-[80%] rounded-md">
             <div class="flex gap-1">
-              <span>{singleProd?.description1}</span>
+              <span>{singleProd?.description}</span>
             </div>
             <button onClick={handleClick}>
               {coped ? (

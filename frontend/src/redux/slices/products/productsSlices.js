@@ -20,7 +20,7 @@ export const createProduct = createAsyncThunk(
       const formData = new FormData();
       formData.append("title", payload?.title);
       formData.append("category", payload?.category);
-      formData.append("description1", payload?.description1);
+      formData.append("description", payload?.description);
       formData.append("description2", payload?.description2);
       formData.append("description3", payload?.description3);
       formData.append("addcopyFb1", payload?.addcopyFb1);
@@ -35,7 +35,7 @@ export const createProduct = createAsyncThunk(
       formData.append("aliexpressLink", payload?.aliexpressLink);
       formData.append("cjdropshippingLink", payload?.cjdropshippingLink);
       formData.append("competitorShop", payload?.competitorShop);
-      formData.append("ppopularity", payload?.ppopularity);
+      formData.append("popullarity", payload?.popullarity);
       formData.append("competitivness", payload?.competitivness);
       formData.append("bestPlatform", payload?.bestPlatform);
       formData.append("descriptionHero", payload?.descriptionHero);
