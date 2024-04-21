@@ -127,7 +127,7 @@ export const saveProductAction = createAsyncThunk(
       );
 
       //update the local storage and user
-      localStorage.setItem("userInfo", JSON.stringify(data?.updatedUser));
+      localStorage.setItem("userInfo", JSON.stringify(data));
 
       return data;
     } catch (error) {
@@ -155,7 +155,7 @@ export const unsaveProductAction = createAsyncThunk(
       );
 
       //update the local storage and user
-      localStorage.setItem("userInfo", JSON.stringify(data?.updatedUser));
+      localStorage.setItem("userInfo", JSON.stringify(data));
 
       return data;
     } catch (error) {
@@ -595,7 +595,7 @@ const userSlice = createSlice({
     });
     builder.addCase(saveProductAction.fulfilled, (state, action) => {
       state.loading = false;
-      state.user = action?.payload?.updatedUser;
+      state.user = action?.payload;
       state.serverError = undefined;
       state.appErr = undefined;
     });
@@ -610,7 +610,7 @@ const userSlice = createSlice({
     });
     builder.addCase(unsaveProductAction.fulfilled, (state, action) => {
       state.loading = false;
-      state.user = action?.payload?.updatedUser;
+      state.user = action?.payload;
       state.serverError = undefined;
       state.appErr = undefined;
     });

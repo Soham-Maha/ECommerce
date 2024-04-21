@@ -13,6 +13,8 @@ import Contact from "./pages/Contact/Contact";
 import ProductsFree from "./pages/FreeProducts/ProductsFree";
 import ProductDetailsFree from "./pages/FreeProdDetails/ProductDetailsFree";
 import CreateProduct from "./pages/CreateProduct/CreateProduct";
+import PaidProducts from "./pages/PremiumProd/PaidProducts"
+import ProdDetails from "./pages/ProdDetailsPaid/ProdDetails";
 
 function App() {
   return (
@@ -30,6 +32,8 @@ function App() {
           <Route path="/productsFree" element={<ProductsFree />} />
           <Route path="/productFree/:id" element={<ProductDetailsFree />} />
           <Route path="/createProduct" element={<CreateProduct />} />
+          <Route path="/premiumProducts" element={<PaidProducts />} />
+          <Route path="/product/:id" element={<ProdDetails />} />
         </Routes>
         <Footer/>
       </CookiesProvider>

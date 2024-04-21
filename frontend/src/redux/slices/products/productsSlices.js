@@ -1,6 +1,6 @@
 import { createAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
-import { baseURL, config } from "../../../utils/baseURL";
+import { baseURL, config } from "../../../utils/baseURL.js";
 
 const redirectCreate = createAction("create/redirect");
 
@@ -23,11 +23,11 @@ export const createProduct = createAsyncThunk(
       formData.append("description", payload?.description);
       formData.append("description2", payload?.description2);
       formData.append("description3", payload?.description3);
-      formData.append("addcopyFb1", payload?.addcopyFb1);
-      formData.append("addcopyFb2", payload?.addcopyFb2);
-      formData.append("addcopy1", payload?.addcopy1);
-      formData.append("addcopy2", payload?.addcopy2);
-      formData.append("addcopy3", payload?.addcopy3);
+      formData.append("adcopyFb1", payload?.adcopyFb1);
+      formData.append("adcopyFb2", payload?.adcopyFb2);
+      formData.append("adcopy1", payload?.adcopy1);
+      formData.append("adcopy2", payload?.adcopy2);
+      formData.append("adcopy3", payload?.adcopy3);
       formData.append("creative1", payload?.creative1);
       formData.append("creative2", payload?.creative2);
       formData.append("priceOfGoods", payload?.priceOfGoods);
@@ -36,25 +36,24 @@ export const createProduct = createAsyncThunk(
       formData.append("cjdropshippingLink", payload?.cjdropshippingLink);
       formData.append("competitorShop", payload?.competitorShop);
       formData.append("popullarity", payload?.popullarity);
-      formData.append("competitivness", payload?.competitivness);
       formData.append("bestPlatform", payload?.bestPlatform);
       formData.append("descriptionHero", payload?.descriptionHero);
-      formData.append("keywords", payload?.keywords);
-      formData.append("user", payload?.user);
-      formData.append("images", payload?.image1);
-      formData.append("images", payload?.image2);
-      formData.append("images", payload?.image3);
-      formData.append("images", payload?.image4);
-      formData.append("images", payload?.image5);
-      formData.append("images", payload?.image6);
-      formData.append("images", payload?.image7);
-      formData.append("images", payload?.image8);
-      formData.append("images", payload?.image9);
-      formData.append("images", payload?.image10);
       formData.append("free", payload?.free);
+      formData.append("images", payload?.images);
+      formData.append("images", payload?.images2);
+      formData.append("images", payload?.images3);
+      formData.append("images", payload?.images4);
+      formData.append("images", payload?.images5);
+      formData.append("images", payload?.images6);
+      formData.append("images", payload?.images7);
+      formData.append("images", payload?.images8);
+      formData.append("images", payload?.images9);
+      formData.append("images", payload?.images10);
+
+      console.log(formData);
 
       const { data } = await axios.post(
-        `${baseURL}/api/products/createProduct`,
+        `${baseURL}/api/products/createPost`,
         formData,
         configCreate
       );
@@ -71,7 +70,7 @@ export const createProduct = createAsyncThunk(
   }
 );
 
-//fetch all data
+//fetch all products
 export const fetchAllProducts = createAsyncThunk(
   "fetchAll/products",
   async (payload, { rejectWithValue, getState, dispatch }) => {
@@ -166,7 +165,7 @@ export const fetchFacebook = createAsyncThunk(
   }
 );
 
-//fetch google
+//fetch google ads products
 export const fetchGoogle = createAsyncThunk(
   "products/google",
   async (payload, { rejectWithValue, getState, dispatch }) => {
@@ -185,7 +184,7 @@ export const fetchGoogle = createAsyncThunk(
   }
 );
 
-//fetch single product
+//fetch a single products
 export const fetchSingleProd = createAsyncThunk(
   "fetchSingle/product",
   async (payload, { rejectWithValue, getState, dispatch }) => {
@@ -204,7 +203,7 @@ export const fetchSingleProd = createAsyncThunk(
   }
 );
 
-//fetch single free product
+//fetch single product free
 export const singleProdFree = createAsyncThunk(
   "single/free",
   async (payload, { rejectWithValue, getState, dispatch }) => {
@@ -233,21 +232,18 @@ export const updateProduct = createAsyncThunk(
       description: payload?.description,
       description2: payload?.description2,
       description3: payload?.description3,
-      competitivness: payload?.competitivness,
       descriptionHero: payload?.descriptionHero,
-      adCopyFb1: payload?.adCopyFb1,
-      adCopyFb2: payload?.adCopyFb2,
-      adCopy1: payload?.adCopy1,
-      adCopy2: payload?.adCopy2,
-      adCopy3: payload?.adCopy3,
-      creative1: payload?.creative1,
-      creative2: payload?.creative2,
+      adcopyFb1: payload?.adcopyFb1,
+      adcopyFb2: payload?.adcopyFb2,
+      adcopy1: payload?.adcopy1,
+      adcopy2: payload?.adcopy2,
+      adcopy3: payload?.adcopy3,
       free: payload?.free,
       priceOfGoods: payload?.priceOfGoods,
       sellPrice: payload?.sellPrice,
       competitorShop: payload?.competitorShop,
-      productAge: payload?.productAge,
-      ppopularity: payload?.ppopularity,
+      popullarity: payload?.popullarity,
+      competitivness: payload?.competitivness,
     };
     try {
       const { data } = await axios.put(
@@ -272,8 +268,7 @@ export const deleteSingleProd = createAsyncThunk(
     const id = payload?.id;
     try {
       const { data } = await axios.delete(
-        `${baseURL}/api/products/deleteProduct/${id}`,
-        config
+        `${baseURL}/api/products/deleteProduct/${id}`, config
       );
       return data;
     } catch (error) {
@@ -285,12 +280,14 @@ export const deleteSingleProd = createAsyncThunk(
   }
 );
 
-//delete all product
+//delete all products
 export const deleteAllProd = createAsyncThunk(
-  "deleteAll/product",
+  "deleteAll/products",
   async (payload, { rejectWithValue, getState, dispatch }) => {
     try {
-      const {data} = await axios.delete(`${baseURL}/api/products/deleteAllProducts`,config)
+      const { data } = await axios.delete(
+        `${baseURL}/api/products/deleteAllProducts`, config
+      );
       return data;
     } catch (error) {
       if (!error?.response) {
@@ -301,7 +298,7 @@ export const deleteAllProd = createAsyncThunk(
   }
 );
 
-//initialize slice
+//initialise slice
 const productSlice = createSlice({
   name: "products",
   initialState: {},
@@ -331,7 +328,7 @@ const productSlice = createSlice({
     });
     builder.addCase(fetchAllProducts.fulfilled, (state, action) => {
       state.loading = false;
-      state.allProductsGot = action?.payload;
+      state.aLLProductsGot = action?.payload;
       state.serverErr = undefined;
       state.appErr = undefined;
     });
@@ -340,13 +337,13 @@ const productSlice = createSlice({
       state.serverErr = action?.payload?.message;
       state.loading = false;
     });
-    //fetch free products
+    //fetch all free products
     builder.addCase(fetchFreeProd.pending, (state, action) => {
       state.loading = true;
     });
     builder.addCase(fetchFreeProd.fulfilled, (state, action) => {
       state.loading = false;
-      state.allFreeProductsGot = action?.payload;
+      state.aLLFreeProductsGot = action?.payload;
       state.serverErr = undefined;
       state.appErr = undefined;
     });
@@ -355,13 +352,13 @@ const productSlice = createSlice({
       state.serverErr = action?.payload?.message;
       state.loading = false;
     });
-    //fetch paid products
+    //fetch all paid products
     builder.addCase(fetchPaidProd.pending, (state, action) => {
       state.loading = true;
     });
     builder.addCase(fetchPaidProd.fulfilled, (state, action) => {
       state.loading = false;
-      state.allPaidProductsGot = action?.payload;
+      state.aLLPaidProductsGot = action?.payload;
       state.serverErr = undefined;
       state.appErr = undefined;
     });
@@ -400,7 +397,7 @@ const productSlice = createSlice({
       state.serverErr = action?.payload?.message;
       state.loading = false;
     });
-    //fetch google products
+    //fetch google ads products
     builder.addCase(fetchGoogle.pending, (state, action) => {
       state.loading = true;
     });
@@ -415,7 +412,7 @@ const productSlice = createSlice({
       state.serverErr = action?.payload?.message;
       state.loading = false;
     });
-    //fetch single products
+    //fetch single product
     builder.addCase(fetchSingleProd.pending, (state, action) => {
       state.loading = true;
     });
@@ -430,7 +427,7 @@ const productSlice = createSlice({
       state.serverErr = action?.payload?.message;
       state.loading = false;
     });
-    //fetch single free products
+    //fetch single product free
     builder.addCase(singleProdFree.pending, (state, action) => {
       state.loading = true;
     });
@@ -451,7 +448,7 @@ const productSlice = createSlice({
     });
     builder.addCase(updateProduct.fulfilled, (state, action) => {
       state.loading = false;
-      state.updateProduct = action?.payload;
+      state.updatedProduct = action?.payload;
       state.serverErr = undefined;
       state.appErr = undefined;
     });
@@ -460,7 +457,7 @@ const productSlice = createSlice({
       state.serverErr = action?.payload?.message;
       state.loading = false;
     });
-    //delete single product
+    //delete product single
     builder.addCase(deleteSingleProd.pending, (state, action) => {
       state.loading = true;
     });
@@ -475,7 +472,7 @@ const productSlice = createSlice({
       state.serverErr = action?.payload?.message;
       state.loading = false;
     });
-    //delete all product
+    //delete all products
     builder.addCase(deleteAllProd.pending, (state, action) => {
       state.loading = true;
     });

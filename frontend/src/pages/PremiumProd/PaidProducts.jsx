@@ -1,21 +1,23 @@
 import React, {useEffect, useState} from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+import {Link, useNavigate} from 'react-router-dom'
+import {useDispatch, useSelector} from 'react-redux'
 import {fetchAllProducts, fetchPaidProd} from '../../redux/slices/products/productsSlices.js'
-import DateFormatter from "../../utils/dateFormate.js";
-import {AiOutlineHeart, AiFillHeart} from 'react-icons/ai';
-import { saveProductAction,unsaveProductAction } from "../../redux/slices/users/usersSlices";
+import DateFormater from "../../utils/dateFormate.js";
+import {AiOutlineHeart, AiFillHeart} from 'react-icons/ai'
+import {saveProductAction, unsaveProductAction, userDetailsAction} from '../../redux/slices/users/usersSlices.js'
 
 const PaidProducts = () => {
-  const dispatch=  useDispatch();
-  const navigate = useNavigate();
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
 
-  const {user,userDetails} = useSelector((state)=>state?.users);
+  const { user, userDetails } = useSelector((state) => state?.users);
 
-  const gotUser = userDetails?.user;
+  const gotUser = userDetails
+  console.log(gotUser);
 
-  const savedProducts = user?.saved?.map((product)=>{
-    return product?._id;
+  const savedProducts = gotUser?.saved?.map((product) => {
+
+    return product._id;
   });
 
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -23,51 +25,61 @@ const PaidProducts = () => {
   const [filter, setFilter] = useState("all");
   const [category, setCategory] = useState("All");
 
-  const {aLLProductsGot: allProductsGot} = useSelector((state)=>state?.products);
+  const { aLLProductsGot: allProductsGot } = useSelector(
+    (state) => state?.products
+  );
 
-  useEffect(() => { 
+  useEffect(() => {
     dispatch(fetchAllProducts())
+    dispatch(userDetailsAction())
+    
   }, [dispatch]);
 
   useEffect(() => {
     if(!user){
       navigate("/login")
     }
-  }, []);
+  }, [])
 
-
-  //paganation states
+  //pagnation states
   const [currentPage, setCurrentPage] = useState(1);
   const recordsPerPage = 6;
-  const lastIndex= currentPage*recordsPerPage;
+  const lastIndex = currentPage * recordsPerPage;
   const firstIndex = lastIndex - recordsPerPage;
 
   const npage = Math.ceil(allProductsGot?.length / recordsPerPage);
-  const records = allProductsGot?.slice(firstIndex,lastIndex);
+  const records = allProductsGot?.slice(firstIndex, lastIndex);
 
-  const numbers =Array.from({length: npage},(_,index)=>index+1);
+  const numbers = Array.from({length: npage}, (_, index) => index + 1);
 
-  const handleLike = (idBack) =>{
-    dispatch(saveProductAction(idBack));
+  const handleLike = (idBack)=> {
+    dispatch(saveProductAction(idBack))
+    dispatch(userDetailsAction());
+    dispatch(userDetailsAction());
   }
 
-  const handleDislike = (idBack)=>{
-    dispatch(unsaveProductAction(idBack));
+  const handleDislike = (idBack)=> {
+    dispatch(unsaveProductAction(idBack))
+    dispatch(userDetailsAction())
+    dispatch(userDetailsAction());
   }
 
-
-  const prePage =  ()=>{
-    if(currentPage  !== firstIndex){
-      setCurrentPage = currentPage -1;
+  const prePage = ()=> {
+    if(currentPage !== firstIndex){
+      setCurrentPage(currentPage - 1);
     }
   };
 
-  const changeCPage = (id) =>{
+  const changeCPage = (id) => {
+    setCurrentPage(id)
+  };
 
-  }
+  const nextPage = ()=> {
+    if(currentPage !== lastIndex){
+      setCurrentPage(currentPage + 1)
+    }
+  };
   
-  
-
   return (
     <div className="overflow-hidden w-full">
       <section class="pt-10 pb-10 lg:pb-20 bg-gray-100/80  font-poppins">
@@ -353,7 +365,7 @@ const PaidProducts = () => {
                               <div className="flex justify-between">
                                 {" "}
                                 <span class="bg-blue-400/90 mb-5 inline-block rounded py-1 px-4 text-center text-xs font-semibold leading-loose text-white">
-                                  <DateFormatter date={singleProd.createdAt} />
+                                  <DateFormater date={singleProd.createdAt} />
                                 </span>
                                 <span>
                                   {savedProducts?.includes(singleProd._id) ? (
@@ -383,7 +395,7 @@ const PaidProducts = () => {
                                 </Link>
                               </h3>
                               <p class="text-body-color text-base">
-                                {singleProd.descriptionHero.slice(0, 170)}
+                                {singleProd.descriptionHero?.slice(0, 170)}
                               </p>
                               <p className="pt-4 font-semibold flex justify-between ">
                                 <p className="pl-2">Price of Goods:</p>{" "}
@@ -457,7 +469,7 @@ const PaidProducts = () => {
                               <div className="flex justify-between">
                                 {" "}
                                 <span class="bg-blue-400/90 mb-5 inline-block rounded py-1 px-4 text-center text-xs font-semibold leading-loose text-white">
-                                  <DateFormatter date={singleProd.createdAt} />
+                                  <DateFormater date={singleProd.createdAt} />
                                 </span>
                                 <span>
                                   {savedProducts?.includes(singleProd._id) ? (
@@ -486,7 +498,7 @@ const PaidProducts = () => {
                                 </Link>
                               </h3>
                               <p class="text-body-color text-base">
-                                {singleProd.descriptionHero.slice(0, 170)}
+                                {singleProd.descriptionHero?.slice(0, 170)}
                               </p>
                               <p className="pt-4 font-semibold flex justify-between ">
                                 <p className="pl-2">Price of Goods:</p>{" "}
