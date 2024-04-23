@@ -377,7 +377,7 @@ export const verifyAccountSend = createAsyncThunk(
   "verify/send",
   async (payload, { rejectWithValue, getState, dispatch }) => {
     const sendData = {
-      email: "",
+      email: payload,
     };
     try {
       const { data } = await axios.post(

@@ -277,7 +277,7 @@ const verifyAccount = asyncHandler(async (req, res) => {
       const verificationToken = await user.createAccountVerificationToken;
       await user.save();
 
-      const verifyURL = `If you want to verify your account click here: <a href="http://localhost:300/verify-account/${verificationToken}">Reset Password</a>`;
+      const verifyURL = `If you want to verify your account click here: <a href="http://localhost:300/verify-account/${verificationToken}">Verify Account</a>`;
 
       const msg = {
         to: user?.email,
