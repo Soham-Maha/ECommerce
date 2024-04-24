@@ -16,6 +16,7 @@ import CreateProduct from "./pages/CreateProduct/CreateProduct";
 import PaidProducts from "./pages/PremiumProd/PaidProducts"
 import ProdDetails from "./pages/ProdDetailsPaid/ProdDetails";
 import Profile from "./pages/Profile/Profile";
+import SavedProducts from "./pages/SavedProducts/SavedProducts";
 
 function App() {
   return (
@@ -36,6 +37,7 @@ function App() {
           <Route path="/premiumProducts" element={<PaidProducts />} />
           <Route path="/product/:id" element={<ProdDetails />} />
           <Route path="/profile/:id" element={<Profile />} />
+          <Route path="/savedProducts" element={<SavedProducts />} />
         </Routes>
         <Footer/>
       </CookiesProvider>
