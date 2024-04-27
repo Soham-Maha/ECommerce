@@ -17,6 +17,15 @@ import PaidProducts from "./pages/PremiumProd/PaidProducts"
 import ProdDetails from "./pages/ProdDetailsPaid/ProdDetails";
 import Profile from "./pages/Profile/Profile";
 import SavedProducts from "./pages/SavedProducts/SavedProducts";
+import ChnagePassword from "./pages/ChangePassword/ChnagePassword";
+import ResetPasswordSend from "./pages/ResetPassSend/ResetPasswordSend";
+import ResetPasswordNew from "./pages/ResetPassClick/ResetPasswordNew";
+import VerifyEmail from "./pages/VerifyEmail/VerifyEmail";
+import PrivacyPolicy from "./pages/PrivacyPolicy/PrivacyPolicy";
+import TermsOfService from "./pages/TermsOfService/TermsOfService";
+import RefundPolicy from "./pages/RefundPolicy/RefundPolicy";
+import StripeSuccess from "./pages/StripeSuccess/StripeSuccess";
+import StripeCancel from "./pages/StripeCancel/StripeCancel";
 
 function App() {
   return (
@@ -38,6 +47,15 @@ function App() {
           <Route path="/product/:id" element={<ProdDetails />} />
           <Route path="/profile/:id" element={<Profile />} />
           <Route path="/savedProducts" element={<SavedProducts />} />
+          <Route path="/password-change" element={<ChnagePassword />} />
+          <Route path="/password-reset" element={<ResetPasswordSend />} />
+          <Route path="/forgot-password-reset/:token" element={<ResetPasswordNew />} />
+          <Route path="/verify-account/:token" element={<VerifyEmail />} />
+          <Route path="/privacyPolicy" element={<PrivacyPolicy />} />
+          <Route path="/termsOfService" element={<TermsOfService />} />
+          <Route path="/refundPolicy" element={<RefundPolicy />} />
+          <Route path="/stripe/success" element={<StripeSuccess />} />
+          <Route path="/stripe/cancel" element={<StripeCancel />} />
         </Routes>
         <Footer/>
       </CookiesProvider>

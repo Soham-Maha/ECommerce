@@ -720,6 +720,7 @@ const userSlice = createSlice({
     builder.addCase(changePassword.fulfilled, (state, action) => {
       state.loading = false;
       state.user = action?.payload?.updatedUser;
+      state.userPassChange = action?.payload?.updatedUser;
       state.serverErr = undefined;
       state.appErr = undefined;
     });

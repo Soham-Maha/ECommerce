@@ -86,7 +86,7 @@ const Login = () => {
                   to={"/password-reset"}
                   class="mb-2 inline-block text-base text-[#adadad] hover:text-primary hover:underline"
                 >
-                  Forget Password?
+                  Forgot Password?
                 </Link>
                 <p class="text-base text-[#adadad]">
                   Not a member yet?{" "}
